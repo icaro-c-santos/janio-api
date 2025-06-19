@@ -1,0 +1,70 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build output
+dist/
+build/
+.out/
+.cache/
+.temp/
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.*.local
+.env.local
+./src/config/envs/.env
+
+# IDE/editor folders
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Logs
+logs/
+*.log
+
+# TypeScript cache
+*.tsbuildinfo
+
+# ESLint / Prettier cache
+.eslintcache
+.prettiercache
+
+# Test coverage and results
+coverage/
+test-results/
+.jest/
+
+# Docker-related
+.docker/
+docker-compose.override.yml
+Dockerfile.*
+*.container
+*.tar
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Optional: Local databases
+*.sqlite
+*.sqlite-journal
+*.db
+
+# Optional: CI/CD artifacts
+*.tgz
+*.bak
+*.pid
+
+# Optional: Debug/Profiler
+heapdump*.heapsnapshot
+
+
