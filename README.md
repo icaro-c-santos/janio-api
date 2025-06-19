@@ -70,33 +70,6 @@ Além disso, foi aplicado um rigoroso padrão de organização de código, separ
 
 ---
 
-## 📄 Organização de Código (Exemplo)
-
-src/
-├── application/
-│ ├── use-cases/
-│ └── services/
-├── domain/
-│ ├── entities/
-│ ├── repositories/
-│ └── value-objects/
-├── infrastructure/
-│ ├── database/
-│ ├── providers/
-│ └── external-apis/
-├── interfaces/
-│ ├── http/
-│ └── cli/
-├── config/
-│ └── envs/
-├── shared/
-│ └── utils/
-
-
-
-
----
-
 ## 📚 Próximos passos
 
 - 🔜 Integração com sistema de emissão de notas fiscais  
