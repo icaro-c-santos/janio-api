@@ -8,7 +8,7 @@ function getConfig() {
       return createProdConfig();
     case 'test':
       return createTestConfig();
-    case 'local':
+    case 'development':
       return createLocalConfig();
     default:
       throw new Error(`Invalid APP_ENV "${process.env.APP_ENV}"`);

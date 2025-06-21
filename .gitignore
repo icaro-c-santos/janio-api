@@ -15,8 +15,8 @@ build/
 
 # Environment files
 .env
-.env.*.local
-.env.local
+.env.*.dev
+.env.dev
 ./src/config/envs/.env
 
 # IDE/editor folders
