@@ -34,7 +34,7 @@ const overrideRules = [
           object: 'process',
           property: 'env',
           message:
-            'Please use appConfig from src/config/index.ts to import any environment variables.',
+            'Please use appConfig from src/config/main.ts to import any environment variables.',
         },
       ],
     },

@@ -1,7 +1,7 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "main.js",
   "license": "MIT",
   "type": "module",
   "dependencies": {
@@ -9,8 +9,8 @@
     "zod": "^3.25.67"
   },
   "scripts": {
-    "start:local": "node --import tsx --env-file=./envoriments/.env.local src/index.ts",
-    "start": "node dist/index.js",
+    "start:dev": "tsx watch --env-file=./envoriments/.env.dev src/main.ts",
+    "start": "node dist/main.js",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },

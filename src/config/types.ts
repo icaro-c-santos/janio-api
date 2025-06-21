@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const appConfigSchema = z.object({
-  APP_ENV: z.enum(['local', 'test', 'production'], {
+  APP_ENV: z.enum(['development', 'test', 'production'], {
     errorMap: () => ({
       message: 'APP_ENV must be one of: local, test, production',
     }),
