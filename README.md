@@ -41,7 +41,7 @@ Além disso, foi aplicado um rigoroso padrão de organização de código, separ
 - 🔐 **Zod** para validação de schemas e variáveis de ambiente  
 - ♻️ **Commitlint + Husky + Lint-Staged** para validação de commits e manutenção de qualidade no pipeline  
 - 🐳 **Docker** (para ambiente isolado e pipelines)  
-- ⚙️ **Vitest / Jest** (Testes Unitários e de Integração)  
+- ⚙️ **Testes** (Testes Usando o executor de testes nativo do node)  
 - 📦 **Gerenciamento de Dependências otimizado com pnpm ou npm**  
 
 ---
@@ -70,13 +70,6 @@ Além disso, foi aplicado um rigoroso padrão de organização de código, separ
 
 ---
 
-## 📚 Próximos passos
-
-- 🔜 Integração com sistema de emissão de notas fiscais  
-- 🔜 Implementação de sistema de relatórios e dashboards gerenciais  
-- 🔜 Deploy com pipelines otimizadas para AWS / Railway / Render  
-
----
 
 ## 🏆 Objetivo final
 
