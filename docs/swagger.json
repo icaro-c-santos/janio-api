@@ -1,0 +1,21 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Minha API",
+    "version": "1.0.0",
+    "description": "Documentação unificada da API"
+  },
+  "servers": [
+    { "$ref": "./servers.json#/servers/0" },
+    { "$ref": "./servers.json#/servers/1" },
+    { "$ref": "./servers.json#/servers/2" }
+  ],
+  "paths": {},
+  "components": {
+    "schemas": { "$ref": "./components/schemas.json" },
+    "responses": { "$ref": "./components/responses.json" },
+    "securitySchemes": { "$ref": "./securitySchemes.json" },
+    "parameters": { "$ref": "./parameters.json" }
+  },
+  "tags": { "$ref": "./tags.json" }
+}

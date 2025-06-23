@@ -11,5 +11,9 @@
     "outDir": "./dist",
     "rootDir": "./src"
   },
-  "include": ["src/**/*.ts", "src/config/envs/validate.envs.ts"]
+  "include": [
+    "src/**/*.ts",
+    "src/config/envs/validate.envs.ts",
+    "docs/swagger.js"
+  ]
 }
