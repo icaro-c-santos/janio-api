@@ -1,0 +1,16 @@
+{
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local development"
+    },
+    {
+      "url": "https://staging.minhaapi.com",
+      "description": "Staging environment"
+    },
+    {
+      "url": "https://api.minhaapi.com",
+      "description": "Production environment"
+    }
+  ]
+}
