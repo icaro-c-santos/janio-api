@@ -7,6 +7,12 @@ export const appConfigSchema = z.object({
     }),
   }),
   API_URL: z.string({ required_error: 'API_URL is required' }),
+  API_SERVICE_NAME: z
+    .string({
+      required_error: 'API_SERVICE_NAME is required',
+      invalid_type_error: 'API_SERVICE_NAME must be a string',
+    })
+    .min(5, 'API_SERVICE_NAME must be at least 5 characters long'),
   API_KEY: z
     .string({
       required_error: 'API_KEY is required',
