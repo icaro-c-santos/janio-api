@@ -13,6 +13,13 @@ export const appConfigSchema = z.object({
       invalid_type_error: 'API_SERVICE_NAME must be a string',
     })
     .min(5, 'API_SERVICE_NAME must be at least 5 characters long'),
+  OTL_COLETOR_URL: z
+    .string({
+      required_error: 'OTL_COLETOR_URL is required',
+      invalid_type_error: 'OTL_COLETOR_URL must be a string',
+    })
+    .min(5, 'OTL_COLETOR_URL must be at least 5 characters long'),
+
   API_KEY: z
     .string({
       required_error: 'API_KEY is required',

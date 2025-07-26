@@ -3,8 +3,16 @@
   "version": "1.0.0",
   "main": "main.js",
   "license": "MIT",
-  "type": "module",
   "dependencies": {
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.62.0",
+    "@opentelemetry/exporter-metrics-otlp-proto": "^0.203.0",
+    "@opentelemetry/exporter-trace-otlp-proto": "^0.203.0",
+    "@opentelemetry/resources": "^2.0.1",
+    "@opentelemetry/sdk-metrics": "^2.0.1",
+    "@opentelemetry/sdk-node": "^0.203.0",
+    "@opentelemetry/sdk-trace-node": "^2.0.1",
+    "@opentelemetry/semantic-conventions": "^1.36.0",
     "express": "^5.1.0",
     "swagger-ui-express": "^5.0.1",
     "winston": "^3.17.0",
@@ -13,7 +21,7 @@
   "scripts": {
     "swagger:validate": "swagger-cli validate ./docs/swagger.json",
     "start:dev": "tsx watch --env-file=./envoriments/.env.dev src/main.ts",
-    "start": "node dist/main.js",
+    "start": "node --env-file=./envoriments/.env.dev --require ./dist/infraestructure/monitoring/instrumentation.js  ./dist/main.js",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
