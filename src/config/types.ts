@@ -13,6 +13,16 @@ export const appConfigSchema = z.object({
       invalid_type_error: 'API_SERVICE_NAME must be a string',
     })
     .min(5, 'API_SERVICE_NAME must be at least 5 characters long'),
+  GCP_CREDENTIALS: z.string({
+    required_error: 'GCP_CREDENTIALS is required',
+    invalid_type_error: 'GCP_CREDENTIALS must be a string',
+  }),
+  BUCKET_NAME: z
+    .string({
+      required_error: 'BUCKET_NAME is required',
+      invalid_type_error: 'BUCKET_NAME must be a string',
+    })
+    .min(4, 'BUCKET_NAME must be at least 4 characters long'),
   OTL_COLETOR_URL: z
     .string({
       required_error: 'OTL_COLETOR_URL is required',

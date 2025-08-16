@@ -8,5 +8,7 @@ export function createProdConfig() {
     API_PORT: process.env.API_PORT as unknown as number,
     API_SERVICE_NAME: process.env.API_SERVICE_NAME!,
     OTL_COLETOR_URL: process.env.OTL_COLETOR_URL!,
+    GCP_CREDENTIALS: process.env.GCP_CREDENTIALS!,
+    BUCKET_NAME: process.env.GCP_CREDENTIALS!,
   });
 }
