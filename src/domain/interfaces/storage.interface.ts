@@ -5,6 +5,8 @@ export interface IStorageService {
     contentType?: string;
   }): Promise<void>;
 
+  ping(): Promise<any>;
+
   generateDownloadUrl(args: {
     path: string;
     expiresInSeconds?: number;

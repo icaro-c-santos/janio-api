@@ -27,6 +27,16 @@ export class GCPStorageService implements IStorageService {
     return url;
   }
 
+  async ping() {
+    try {
+      const [value] = await this.bucket.exists();
+      if (!value) throw new Error('BUCKET NOT EXISTS');
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   async uploadFile({
     buffer,
     path,
