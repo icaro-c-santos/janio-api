@@ -7,3 +7,140 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id           String        @id @default(uuid()) @db.Uuid
+  type         UserType
+  email        String?       @unique
+  phones       UserPhone[]
+  addresses    UserAddress[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  individual   Individual?
+  company      Company?
+  customer     Customer?
+  supplier     Supplier?
+}
+
+model Individual {
+  userId        String   @id @db.Uuid
+  user          User     @relation(fields: [userId], references: [id])
+  cpf           String   @unique
+  fullName      String
+  birthDate     DateTime?
+}
+
+model Company {
+  userId            String   @id @db.Uuid
+  user              User     @relation(fields: [userId], references: [id])
+  cnpj              String   @unique
+  legalName         String
+  tradeName         String?
+  stateRegistration String?
+}
+
+model Customer {
+  userId  String   @id @db.Uuid
+  user    User     @relation(fields: [userId], references: [id])
+
+  sales   Sale[]
+  customerPrices CustomerProductPrice[]
+}
+
+model Supplier {
+  userId       String   @id @db.Uuid
+  user         User     @relation(fields: [userId], references: [id])
+  supplies     SupplyReceipt[]
+}
+
+model Address {
+  id         String       @id @default(uuid()) @db.Uuid
+  street     String
+  number     String
+  district   String
+  city       String
+  state      String
+  postalCode String
+  country    String
+  users      UserAddress[]
+}
+
+model UserAddress {
+  id         Int      @id @default(autoincrement())
+  userId     String   @db.Uuid
+  addressId  String   @db.Uuid
+  isPrimary  Boolean  @default(false)
+  user       User     @relation(fields: [userId], references: [id])
+  address    Address  @relation(fields: [addressId], references: [id])
+}
+
+model UserPhone {
+  id         Int      @id @default(autoincrement())
+  userId     String   @db.Uuid
+  phone      String
+  isPrimary  Boolean  @default(false)
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Product {
+  id          String     @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+  price       Decimal?   @db.Decimal(10, 4)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  sales       Sale[]
+  customerPrices CustomerProductPrice[]
+}
+
+model Sale {
+  id          String    @id @default(uuid()) @db.Uuid
+  productId   String    @db.Uuid
+  customerId  String    @db.Uuid
+  quantity    Int
+  unitPrice   Decimal   @db.Decimal(10, 4)
+  totalPrice  Decimal   @db.Decimal(10, 4)
+  saleDate    DateTime  @default(now())
+  receiptUrl  String?
+
+  product     Product   @relation(fields: [productId], references: [id])
+  customer    Customer  @relation(fields: [customerId], references: [userId])
+}
+
+model CustomerProductPrice {
+  id          String    @id @default(uuid()) @db.Uuid
+  customerId  String    @db.Uuid
+  productId   String    @db.Uuid
+  price       Decimal   @db.Decimal(10, 4)
+  createdAt   DateTime  @default(now())
+
+  customer    Customer  @relation(fields: [customerId], references: [userId])
+  product     Product   @relation(fields: [productId], references: [id])
+}
+
+
+model SupplyType {
+  id       String          @id @default(uuid()) @db.Uuid
+  name     String          @unique  // "Coco", "Rótulo", "Garrafa PET", "Etiqueta"
+  supplies SupplyReceipt[]
+}
+
+model SupplyReceipt {
+  id           String        @id @default(uuid()) @db.Uuid
+  supplierId   String        @db.Uuid
+  supplyTypeId String        @db.Uuid
+  receivedDate DateTime
+  quantity     Int
+  unitPrice    Decimal       @db.Decimal(10, 4)
+  totalPrice   Decimal       @db.Decimal(10, 4)
+  createdAt    DateTime      @default(now())
+
+  supplier     Supplier      @relation(fields: [supplierId], references: [userId])
+  supplyType   SupplyType    @relation(fields: [supplyTypeId], references: [id])
+}
+
+enum UserType {
+  INDIVIDUAL
+  COMPANY
+}
