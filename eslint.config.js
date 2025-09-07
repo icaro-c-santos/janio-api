@@ -23,6 +23,7 @@ const overrideRules = [
     rules: {
       '@typescript-eslint/consistent-type-definitions': 'off',
       'import-x/prefer-default-export': 'off',
+      'class-methods-use-this': 'off',
     },
   },
   {

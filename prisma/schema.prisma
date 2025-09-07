@@ -12,10 +12,12 @@ model User {
   id           String        @id @default(uuid()) @db.Uuid
   type         UserType
   email        String?       @unique
-  phones       UserPhone[]
-  addresses    UserAddress[]
+  phones       Phone[]
+  addresses    Address[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+  deletedAt    DateTime?
+  anonymizedAt DateTime?  
 
   individual   Individual?
   company      Company?
@@ -29,6 +31,8 @@ model Individual {
   cpf           String   @unique
   fullName      String
   birthDate     DateTime?
+  deletedAt     DateTime?
+  anonymizedAt  DateTime?  
 }
 
 model Company {
@@ -38,11 +42,13 @@ model Company {
   legalName         String
   tradeName         String?
   stateRegistration String?
+  deletedAt         DateTime?
 }
 
 model Customer {
   userId  String   @id @db.Uuid
   user    User     @relation(fields: [userId], references: [id])
+  deletedAt        DateTime?
 
   sales   Sale[]
   customerPrices CustomerProductPrice[]
@@ -50,12 +56,14 @@ model Customer {
 
 model Supplier {
   userId       String   @id @db.Uuid
+  deletedAt    DateTime?
   user         User     @relation(fields: [userId], references: [id])
   supplies     SupplyReceipt[]
 }
 
 model Address {
-  id         String       @id @default(uuid()) @db.Uuid
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @db.Uuid
   street     String
   number     String
   district   String
@@ -63,33 +71,35 @@ model Address {
   state      String
   postalCode String
   country    String
-  users      UserAddress[]
-}
-
-model UserAddress {
-  id         Int      @id @default(autoincrement())
-  userId     String   @db.Uuid
-  addressId  String   @db.Uuid
-  isPrimary  Boolean  @default(false)
-  user       User     @relation(fields: [userId], references: [id])
-  address    Address  @relation(fields: [addressId], references: [id])
-}
-
-model UserPhone {
-  id         Int      @id @default(autoincrement())
-  userId     String   @db.Uuid
-  phone      String
   isPrimary  Boolean  @default(false)
   user       User     @relation(fields: [userId], references: [id])
 }
+
+enum PhoneType {
+  FIXED
+  MOBILE
+}
+
+model Phone {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String    @db.Uuid
+  areaCode   String
+  number     String
+  isPrimary  Boolean   @default(false)
+  isWhatsapp Boolean   @default(false)
+  type       PhoneType 
+  user       User      @relation(fields: [userId], references: [id])
+}
+
 
 model Product {
   id          String     @id @default(uuid()) @db.Uuid
   name        String
   description String?
-  price       Decimal?   @db.Decimal(10, 4)
+  price       Decimal   @db.Decimal(10, 4)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+  deletedAt   DateTime?
   sales       Sale[]
   customerPrices CustomerProductPrice[]
 }
@@ -101,8 +111,11 @@ model Sale {
   quantity    Int
   unitPrice   Decimal   @db.Decimal(10, 4)
   totalPrice  Decimal   @db.Decimal(10, 4)
-  saleDate    DateTime  @default(now())
+  saleDate    DateTime 
   receiptUrl  String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deletedAt   DateTime?
 
   product     Product   @relation(fields: [productId], references: [id])
   customer    Customer  @relation(fields: [customerId], references: [userId])
@@ -135,6 +148,7 @@ model SupplyReceipt {
   unitPrice    Decimal       @db.Decimal(10, 4)
   totalPrice   Decimal       @db.Decimal(10, 4)
   createdAt    DateTime      @default(now())
+  deletedAt    DateTime?
 
   supplier     Supplier      @relation(fields: [supplierId], references: [userId])
   supplyType   SupplyType    @relation(fields: [supplyTypeId], references: [id])

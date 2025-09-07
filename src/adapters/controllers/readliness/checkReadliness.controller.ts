@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { CheckReadinessUseCase } from '../../aplication/usecases/checkReadliness.useCase';
-import { ReadinessStatus } from '../../aplication/usecases/types';
+import { ReadinessStatus } from '../../../aplication/usecases/readlliness/types';
+import { CheckReadinessUseCase } from '../../../aplication/usecases/readlliness/check-readliness.useCase';
 
 export class CheckReadinessController {
   constructor(private checkReadinessUseCase: CheckReadinessUseCase) {}

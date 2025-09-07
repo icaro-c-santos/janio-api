@@ -16,5 +16,5 @@
     "src/**/*.ts",
     "src/config/envs/validate.envs.ts",
     "docs/swagger.js"
-  ]
+, "src/aplication/usecases/customer/mappers/customerToCustomeResponse.mapper.ts"  ]
 }

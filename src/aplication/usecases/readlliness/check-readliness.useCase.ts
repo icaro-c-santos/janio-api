@@ -1,4 +1,4 @@
-import { IStorageService } from '../../domain/interfaces/storage.interface';
+import { IStorageService } from '../../../domain/interfaces/storage.interface';
 import {
   CheckReadinessUseCaseResponse,
   ReadinessStatus,

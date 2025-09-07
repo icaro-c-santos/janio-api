@@ -1,7 +1,7 @@
 export interface IStorageService {
   uploadFile(args: {
     buffer: Buffer;
-    path: string;
+    key: string;
     contentType?: string;
   }): Promise<void>;
 

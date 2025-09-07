@@ -39,14 +39,14 @@ export class GCPStorageService implements IStorageService {
 
   async uploadFile({
     buffer,
-    path,
+    key,
     contentType,
   }: {
     buffer: Buffer;
-    path: string;
+    key: string;
     contentType?: string;
   }): Promise<void> {
-    const file = this.bucket.file(path);
+    const file = this.bucket.file(key);
     await file.save(buffer, {
       contentType,
       resumable: false,
