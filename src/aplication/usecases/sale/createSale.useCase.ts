@@ -75,6 +75,7 @@ export class CreateSaleUseCase implements ICreateSaleUseCase {
       customerId: input.customerId,
       quantity: input.quantity,
       unitPrice: input.unitPrice,
+      saleDate: input.saleDate,
       totalPrice,
       receiptUrl,
     };
@@ -91,7 +92,7 @@ export class CreateSaleUseCase implements ICreateSaleUseCase {
         unitPrice: createdSale.unitPrice,
         totalPrice: createdSale.totalPrice,
         saleDate: createdSale.saleDate,
-        receiptUrl: createdSale.receiptUrl || '',
+        receiptUrl: createdSale.receiptUrl || null,
       },
     };
   }
@@ -120,7 +121,7 @@ export class CreateSaleUseCase implements ICreateSaleUseCase {
       return {
         success: false,
         status: 400,
-        error: 'Quantity must be more on than zero',
+        error: 'Quantity must be an integer and more on than zero',
       };
     }
     if (quantity > 100) {
@@ -144,11 +145,11 @@ export class CreateSaleUseCase implements ICreateSaleUseCase {
         error: 'Unit price must be a positive number',
       };
     }
-    if (unitPrice > 999999.99) {
+    if (unitPrice > 100000) {
       return {
         success: false,
         status: 400,
-        error: 'Unit price cannot exceed 999,999.99',
+        error: 'Unit price cannot exceed 100000',
       };
     }
     return {

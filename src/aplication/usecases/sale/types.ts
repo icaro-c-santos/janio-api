@@ -5,7 +5,7 @@ export interface CreateSaleInput {
   customerId: string;
   quantity: number;
   unitPrice: number;
-  totalPrice: number;
+  saleDate: Date;
   file: Express.Multer.File | null;
 }
 
@@ -17,7 +17,7 @@ export interface CreateSaleResponse {
   unitPrice: number;
   totalPrice: number;
   saleDate: Date;
-  receiptUrl?: string;
+  receiptUrl: string | null;
 }
 export interface ICreateSaleUseCase {
   execute(input: CreateSaleInput): Promise<Result<CreateSaleResponse>>;

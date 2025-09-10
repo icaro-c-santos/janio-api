@@ -17,11 +17,6 @@ export const createSaleSchema = z.object({
     z.number().positive({ message: 'unitPrice must be greater than 0' }),
   ),
 
-  totalPrice: z.preprocess(
-    (val) => Number(val),
-    z.number().positive({ message: 'totalPrice must be greater than 0' }),
-  ),
-
   saleDate: z.preprocess(
     (val) => {
       if (val instanceof Date) return val;

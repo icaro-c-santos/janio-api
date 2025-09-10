@@ -8,6 +8,7 @@ export interface CreateSaleData {
   quantity: number;
   unitPrice: number;
   totalPrice: number;
+  saleDate: Date;
   receiptUrl: string | null;
 }
 

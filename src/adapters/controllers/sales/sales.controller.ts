@@ -19,8 +19,8 @@ export class SaleController {
       customerId: validatedData.data.customerId,
       productId: validatedData.data.productId,
       quantity: validatedData.data.quantity,
-      totalPrice: validatedData.data.totalPrice,
       unitPrice: validatedData.data.unitPrice,
+      saleDate: validatedData.data.saleDate,
       file: req?.file || null,
     };
 
