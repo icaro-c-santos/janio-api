@@ -1,5 +1,9 @@
 export interface IProductRepository {
   findById(id: string): Promise<Product | null>;
+  getProductPriceByCustomerId(props: {
+    customerId: string;
+    productId: string;
+  }): Promise<number | null>;
 }
 
 export interface Product {

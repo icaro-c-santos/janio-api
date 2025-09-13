@@ -1,13 +1,19 @@
 import { Request, Response } from 'express';
-import { GetProductByIdUseCase } from '../../../aplication/usecases/products/get-product-by-id.use.case';
 import { getproductByIdSchema } from './schemas/getProductById.schema';
+import {
+  IGetProductByIdUseCase,
+  IGetProductPriceByCustomerIdUseCase,
+} from '../../../aplication/usecases/products/types';
+import { getProductPriceByCustomerIdSchema } from './schemas/getProductPriceByCustomerId.schema';
 
 export class ProductController {
-  constructor(private readonly getProductByIdUseCase: GetProductByIdUseCase) {}
+  constructor(
+    private readonly getProductByIdUseCase: IGetProductByIdUseCase,
+    private readonly getProductPriceByCustomerIdUseCase: IGetProductPriceByCustomerIdUseCase,
+  ) {}
 
   async getProductById(req: Request, res: Response) {
-    const id = req.params?.id;
-
+    const id = req.params?.productId;
     const validatedData = getproductByIdSchema.safeParse({
       id,
     });
@@ -19,9 +25,43 @@ export class ProductController {
       });
     }
 
-    const result = await this.getProductByIdUseCase.execute({ id });
+    const result = await this.getProductByIdUseCase.execute({
+      id: validatedData.data.id,
+    });
 
     if (!result.success) {
+      return res.status(400).json({
+        message: result.error,
+      });
+    }
+
+    return res.status(200).json(result.data);
+  }
+
+  async getProductPriceByCustomer(req: Request, res: Response) {
+    const validatedData = getProductPriceByCustomerIdSchema.safeParse({
+      customerId: req?.params.customerId,
+      productId: req?.params.productId,
+    });
+
+    if (!validatedData.success) {
+      return res.status(400).json({
+        message: 'INVALID DATA',
+        errors: validatedData.error.errors,
+      });
+    }
+
+    const result = await this.getProductPriceByCustomerIdUseCase.execute({
+      customerId: validatedData.data.customerId,
+      productId: validatedData.data.productId,
+    });
+
+    if (!result.success) {
+      if (result.error === 'PRICE NOT FOUND') {
+        return res.status(404).json({
+          message: 'PRICE NOT FOUND',
+        });
+      }
       return res.status(400).json({
         message: result.error,
       });

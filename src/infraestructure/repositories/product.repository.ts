@@ -29,4 +29,25 @@ export class ProductRepository implements IProductRepository {
       description: productEntity.description,
     };
   }
+
+  async getProductPriceByCustomerId({
+    customerId,
+    productId,
+  }: {
+    customerId: string;
+    productId: string;
+  }): Promise<number | null> {
+    const data = await this.prisma.customerProductPrice.findUnique({
+      where: {
+        customerId_productId: {
+          customerId,
+          productId,
+        },
+      },
+    });
+
+    if (!data) return null;
+
+    return Number(data.price);
+  }
 }
