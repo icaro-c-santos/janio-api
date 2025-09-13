@@ -16,3 +16,18 @@ export interface GetProductByIdResponse {
 export interface IGetProductByIdUseCase {
   execute(input: GetProductByIdInput): Promise<Result<GetProductByIdResponse>>;
 }
+
+export interface GetProductPriceByCustomerIdResponse {
+  price: number;
+}
+
+export interface GetProductPriceByCustomerIdInput {
+  customerId: string;
+  productId: string;
+}
+
+export interface IGetProductPriceByCustomerIdUseCase {
+  execute(
+    input: GetProductPriceByCustomerIdInput,
+  ): Promise<Result<GetProductPriceByCustomerIdResponse>>;
+}

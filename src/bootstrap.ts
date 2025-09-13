@@ -12,7 +12,10 @@ import { ProductRepository } from './infraestructure/repositories/product.reposi
 import { CheckReadinessController } from './adapters/controllers/readliness/checkReadliness.controller';
 import { CheckReadinessUseCase } from './aplication/usecases/readlliness/check-readliness.useCase';
 import { GetAllCustomersUseCase } from './aplication/usecases/customer/get-all-customers.use.case';
-import { CustomerController } from './adapters/controllers/customer/customer.controller';
+import { GetProductByIdUseCase } from './aplication/usecases/products/get-product-by-id.use.case';
+import { GetProductPriceByCustomerIdUseCase } from './aplication/usecases/products/get-product-price-by-custormer.use-case';
+import { ProductController } from './adapters/controllers/products/product.controller';
+import { CustomerController } from './adapters/controllers/customers/customer.controller';
 
 export async function bootstrap() {
   const app = express();
@@ -41,16 +44,28 @@ export async function bootstrap() {
   );
   const getAllCustomersUseCase = new GetAllCustomersUseCase(customerRepository);
 
+  const getProductByIdUseCase = new GetProductByIdUseCase(productRepository);
+
+  const getProductPriceByCustomerIdUseCase =
+    new GetProductPriceByCustomerIdUseCase(productRepository);
+
   const checkReadinessController = new CheckReadinessController(
     checkReadinessUseCase,
   );
   const saleController = new SaleController(createSaleUseCase);
 
   const customerController = new CustomerController(getAllCustomersUseCase);
+
+  const productController = new ProductController(
+    getProductByIdUseCase,
+    getProductPriceByCustomerIdUseCase,
+  );
+
   registerRoutes(app, {
     checkReadinessController,
     saleController,
     customerController,
+    productController,
   });
 
   return app;

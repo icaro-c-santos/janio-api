@@ -160,6 +160,9 @@ CREATE UNIQUE INDEX "Individual_cpf_key" ON "public"."Individual"("cpf");
 CREATE UNIQUE INDEX "Company_cnpj_key" ON "public"."Company"("cnpj");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "CustomerProductPrice_customerId_productId_key" ON "public"."CustomerProductPrice"("customerId", "productId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "SupplyType_name_key" ON "public"."SupplyType"("name");
 
 -- AddForeignKey
