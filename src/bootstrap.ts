@@ -1,9 +1,8 @@
 import express from 'express';
-import { Storage } from '@google-cloud/storage';
+import cors from 'cors';
 import { registerRoutes } from './adapters/routes';
 import { SaleController } from './adapters/controllers/sales/sales.controller';
 import { CreateSaleUseCase } from './aplication/usecases/sale/createSale.useCase';
-import { GCPStorageService } from './infraestructure/storage/gcp-storage.service';
 import { SaleRepository } from './infraestructure/repositories/sale.repository';
 import { appConfig } from './config';
 import { prisma } from './infraestructure/db/prisma-client';
@@ -16,29 +15,26 @@ import { GetProductByIdUseCase } from './aplication/usecases/products/get-produc
 import { GetProductPriceByCustomerIdUseCase } from './aplication/usecases/products/get-product-price-by-custormer.use-case';
 import { ProductController } from './adapters/controllers/products/product.controller';
 import { CustomerController } from './adapters/controllers/customers/customer.controller';
+import { S3StorageService } from './infraestructure/storage/minio-storage.service';
 
 export async function bootstrap() {
   const app = express();
 
-  const credentials = JSON.parse(appConfig.GCP_CREDENTIALS);
-  const storage = new Storage({
-    projectId: credentials.projectId,
-    credentials,
-  });
-
-  const gCPStorageService = new GCPStorageService(
-    appConfig.BUCKET_NAME,
-    storage,
+  app.use(
+    cors({
+      origin: '*',
+    }),
   );
 
+  const storage = new S3StorageService(appConfig.BUCKET_NAME);
   const saleRepository = new SaleRepository(prisma);
   const customerRepository = new CustomerRepository(prisma);
   const productRepository = new ProductRepository(prisma);
 
-  const checkReadinessUseCase = new CheckReadinessUseCase(gCPStorageService);
+  const checkReadinessUseCase = new CheckReadinessUseCase(storage);
   const createSaleUseCase = new CreateSaleUseCase(
     saleRepository,
-    gCPStorageService,
+    storage,
     customerRepository,
     productRepository,
   );

@@ -6,6 +6,7 @@ import { bootstrap } from './bootstrap';
 
 const run = async () => {
   const app = await bootstrap();
+
   app.use(express.json({ limit: '16kb' }));
   app.use(express.urlencoded({ extended: true, limit: '16kb' }));
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
