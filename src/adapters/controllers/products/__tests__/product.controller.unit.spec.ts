@@ -24,7 +24,7 @@ describe('ProductController - getProductById', () => {
 
     req = {
       params: {
-        id: defaultProductId,
+        productId: defaultProductId,
       },
     };
 
