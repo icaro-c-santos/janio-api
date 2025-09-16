@@ -2,9 +2,13 @@ import { Request, Response } from 'express';
 import { CreateSaleUseCase } from '../../../aplication/usecases/sale/createSale.useCase';
 import { createSaleSchema } from './schemas/createSale.schema';
 import { CreateSaleInput } from '../../../aplication/usecases/sale/types';
+import { GetAllSalesUseCase } from '../../../aplication/usecases/sale/get-all-sales.use.case';
 
 export class SaleController {
-  constructor(private createSaleUseCase: CreateSaleUseCase) {}
+  constructor(
+    private createSaleUseCase: CreateSaleUseCase,
+    private getAllSalesUseCase: GetAllSalesUseCase,
+  ) {}
 
   async createSale(req: Request, res: Response) {
     const validatedData = createSaleSchema.safeParse(req.body);
@@ -38,6 +42,21 @@ export class SaleController {
     return res.status(statusCode).json({
       success: false,
       error: result.error,
+    });
+  }
+
+  async getAllSales(req: Request, res: Response) {
+    const result = await this.getAllSalesUseCase.execute();
+
+    if (!result.success) {
+      return res.status(400).json({
+        error: result.error,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: result.data,
     });
   }
 }

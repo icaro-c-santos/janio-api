@@ -17,7 +17,7 @@ describe('SaleController - createSale', () => {
       execute: jest.fn(),
     } as any;
 
-    controller = new SaleController(createSaleUseCase);
+    controller = new SaleController(createSaleUseCase, {} as any);
 
     req = {
       body: {

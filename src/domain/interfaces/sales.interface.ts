@@ -1,5 +1,18 @@
+import {
+  RepositoryPaginatedInput,
+  RepositoryPaginatedResult,
+} from './shared/types';
+
 export interface ISaleRepository {
   create(sale: CreateSaleData): Promise<Sale>;
+  getAll(filter: GetSalesFilter): Promise<RepositoryPaginatedResult<Sale>>;
+}
+
+export interface GetSalesFilter extends RepositoryPaginatedInput {
+  startDate?: Date;
+  endDate?: Date;
+  customerId?: string;
+  productId?: string;
 }
 
 export interface CreateSaleData {
@@ -21,13 +34,13 @@ export interface Sale {
   totalPrice: number;
   saleDate: Date;
   receiptUrl?: string | null;
-  product?: {
+  product: {
     id: string;
     name: string;
     description: string | null;
     price?: number;
   };
-  customer?: {
+  customer: {
     userId: string;
     user: {
       id: string;
