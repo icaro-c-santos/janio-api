@@ -93,6 +93,8 @@ export class CreateSaleUseCase implements ICreateSaleUseCase {
         totalPrice: createdSale.totalPrice,
         saleDate: createdSale.saleDate,
         receiptUrl: createdSale.receiptUrl || null,
+        customer: createdSale.customer,
+        product: createdSale.product,
       },
     };
   }

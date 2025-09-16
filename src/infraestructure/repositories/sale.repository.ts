@@ -11,7 +11,9 @@ import {
   ISaleRepository,
   CreateSaleData,
   Sale,
+  GetSalesFilter,
 } from '../../domain/interfaces/sales.interface';
+import { RepositoryPaginatedResult } from '../../domain/interfaces/shared/types';
 
 export class SaleRepository implements ISaleRepository {
   constructor(private prisma: PrismaClient) {}
@@ -45,6 +47,59 @@ export class SaleRepository implements ISaleRepository {
     return SaleRepository.mapPrismaSaleToSale(sale);
   }
 
+  async getAll(
+    filter: GetSalesFilter,
+  ): Promise<RepositoryPaginatedResult<Sale>> {
+    const { skip, take } = filter;
+
+    const where = {
+      deletedAt: null,
+      customerId: filter?.customerId,
+      productId: filter?.productId,
+    };
+
+    if (filter?.startDate || filter?.endDate) {
+      Object.assign(where, {
+        saleDate: {
+          gte: filter?.startDate,
+          lte: filter?.endDate,
+        },
+      });
+    }
+
+    const [sales, total] = await Promise.all([
+      this.prisma.sale.findMany({
+        where,
+        include: {
+          product: true,
+          customer: {
+            include: {
+              user: {
+                include: {
+                  individual: true,
+                  company: true,
+                },
+              },
+            },
+          },
+        },
+        skip,
+        take,
+      }),
+      this.prisma.sale.count({
+        where: {
+          deletedAt: null,
+        },
+      }),
+    ]);
+    return {
+      total,
+      skip,
+      take,
+      items: sales.map((sale) => SaleRepository.mapPrismaSaleToSale(sale)),
+    };
+  }
+
   private static mapPrismaSaleToSale(
     saleEntity: SaleEntity & {
       product: ProductEntity;
@@ -65,22 +120,18 @@ export class SaleRepository implements ISaleRepository {
       totalPrice: Number(saleEntity.totalPrice),
       saleDate: saleEntity.saleDate,
       receiptUrl: saleEntity.receiptUrl,
-      product: saleEntity.product
-        ? {
-            id: saleEntity.product.id,
-            name: saleEntity.product.name,
-            description: saleEntity.product.description,
-            price: saleEntity.product.price
-              ? Number(saleEntity.product.price)
-              : undefined,
-          }
-        : undefined,
-      customer: saleEntity.customer
-        ? {
-            userId: saleEntity.customer.userId,
-            user: SaleRepository.mapUser(saleEntity.customer.user),
-          }
-        : undefined,
+      product: {
+        id: saleEntity.product.id,
+        name: saleEntity.product.name,
+        description: saleEntity.product.description,
+        price: saleEntity.product.price
+          ? Number(saleEntity.product.price)
+          : undefined,
+      },
+      customer: {
+        userId: saleEntity.customer.userId,
+        user: SaleRepository.mapUser(saleEntity.customer.user),
+      },
     };
   }
 

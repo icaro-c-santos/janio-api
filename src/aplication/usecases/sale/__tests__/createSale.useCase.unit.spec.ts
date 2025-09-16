@@ -223,6 +223,8 @@ describe('CreateSaleUseCase', () => {
         totalPrice: mockCreatedSale.totalPrice,
         saleDate: mockCreatedSale.saleDate,
         receiptUrl: null,
+        customer: mockCreatedSale.customer,
+        product: mockCreatedSale.product,
       });
 
       expect(saleRepository.create).toHaveBeenCalledWith({

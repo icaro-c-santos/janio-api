@@ -1,5 +1,7 @@
 import { CreateSaleResponse } from '../../aplication/usecases/sale/types';
+import { createCustomerMock } from './customer.mock';
 import { faker } from './faker';
+import { createProductMock } from './product.mock';
 
 export function createSaleMock(
   options?: Partial<CreateSaleResponse>,
@@ -17,5 +19,7 @@ export function createSaleMock(
       options?.receiptUrl !== undefined
         ? options.receiptUrl
         : `https://storage.example.com/receipts/${faker.string.uuid()}.pdf`,
+    customer: createCustomerMock(),
+    product: createProductMock(),
   };
 }

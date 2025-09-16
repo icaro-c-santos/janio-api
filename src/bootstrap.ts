@@ -16,6 +16,7 @@ import { GetProductPriceByCustomerIdUseCase } from './aplication/usecases/produc
 import { ProductController } from './adapters/controllers/products/product.controller';
 import { CustomerController } from './adapters/controllers/customers/customer.controller';
 import { S3StorageService } from './infraestructure/storage/minio-storage.service';
+import { GetAllSalesUseCase } from './aplication/usecases/sale/get-all-sales.use.case';
 
 export async function bootstrap() {
   const app = express();
@@ -38,6 +39,7 @@ export async function bootstrap() {
     customerRepository,
     productRepository,
   );
+  const getAllSalesUseCase = new GetAllSalesUseCase(saleRepository);
   const getAllCustomersUseCase = new GetAllCustomersUseCase(customerRepository);
 
   const getProductByIdUseCase = new GetProductByIdUseCase(productRepository);
@@ -48,7 +50,10 @@ export async function bootstrap() {
   const checkReadinessController = new CheckReadinessController(
     checkReadinessUseCase,
   );
-  const saleController = new SaleController(createSaleUseCase);
+  const saleController = new SaleController(
+    createSaleUseCase,
+    getAllSalesUseCase,
+  );
 
   const customerController = new CustomerController(getAllCustomersUseCase);
 

@@ -46,6 +46,11 @@ export function registerRoutes(
     ),
   );
 
+  app.get(
+    '/sales',
+    controllers.saleController.getAllSales.bind(controllers.saleController),
+  );
+
   app.post(
     '/sales',
     upload.single('file'),
