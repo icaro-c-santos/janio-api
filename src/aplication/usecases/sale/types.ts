@@ -17,7 +17,8 @@ export interface CreateSaleResponse {
   unitPrice: number;
   totalPrice: number;
   saleDate: Date;
-  receiptUrl: string | null;
+  receiptFileKey: string | null;
+  receiptFileUrl?: string | null;
   product: {
     id: string;
     name: string;
@@ -63,7 +64,7 @@ export interface GetAllSalesResponse {
   unitPrice: number;
   totalPrice: number;
   saleDate: Date;
-  receiptUrl?: string | null;
+  receiptFileKey?: string | null;
   product: {
     id: string;
     name: string;

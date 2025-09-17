@@ -3,7 +3,7 @@ export enum EPhoneType {
   'MOBILE',
 }
 
-export interface Phone {
+export interface PhoneDomain {
   id: string;
   areaCode: string;
   isPrimary: boolean;

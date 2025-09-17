@@ -4,8 +4,10 @@ import {
 } from './shared/types';
 
 export interface ISaleRepository {
-  create(sale: CreateSaleData): Promise<Sale>;
-  getAll(filter: GetSalesFilter): Promise<RepositoryPaginatedResult<Sale>>;
+  create(sale: CreateSaleData): Promise<SaleDomain>;
+  getAll(
+    filter: GetSalesFilter,
+  ): Promise<RepositoryPaginatedResult<SaleDomain>>;
 }
 
 export interface GetSalesFilter extends RepositoryPaginatedInput {
@@ -22,10 +24,10 @@ export interface CreateSaleData {
   unitPrice: number;
   totalPrice: number;
   saleDate: Date;
-  receiptUrl: string | null;
+  receiptFileKey: string | null;
 }
 
-export interface Sale {
+export interface SaleDomain {
   id: string;
   productId: string;
   customerId: string;
@@ -33,7 +35,7 @@ export interface Sale {
   unitPrice: number;
   totalPrice: number;
   saleDate: Date;
-  receiptUrl?: string | null;
+  receiptFileKey?: string | null;
   product: {
     id: string;
     name: string;

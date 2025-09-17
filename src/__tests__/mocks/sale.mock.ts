@@ -15,11 +15,12 @@ export function createSaleMock(
     totalPrice:
       options?.totalPrice ?? faker.number.int({ min: 10, max: 10000 }),
     saleDate: options?.saleDate ?? faker.date.birthdate(),
-    receiptUrl:
-      options?.receiptUrl !== undefined
-        ? options.receiptUrl
-        : `https://storage.example.com/receipts/${faker.string.uuid()}.pdf`,
+    receiptFileUrl:
+      options?.receiptFileUrl !== undefined
+        ? options.receiptFileUrl
+        : faker.string.uuid(),
     customer: createCustomerMock(),
     product: createProductMock(),
+    receiptFileKey: options?.receiptFileKey ?? null,
   };
 }

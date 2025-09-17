@@ -1,7 +1,7 @@
 import { addYears } from 'date-fns';
 import { faker } from './faker';
 import { createPhoneMock } from './phone.mock';
-import { User } from '../../domain/interfaces/user.interface';
+import { UserDomain } from '../../domain/interfaces/user.interface';
 
 const generateRandomCpf = () => {
   const random = (n: number) => Math.floor(Math.random() * n);
@@ -118,7 +118,7 @@ const generateRandomCnpj = () => {
   return `${n1}${n2}${n3}.${n4}${n5}${n6}.${n7}${n8}${n9}/${n10}${n11}${n12}${dv1}${dv2}`;
 };
 
-export function createUserMock(options?: Partial<User>) {
+export function createUserMock(options?: Partial<UserDomain>) {
   const userId = options?.id ?? faker.string.uuid();
   const dateNow = new Date();
   const createdAt = addYears(dateNow, -2);

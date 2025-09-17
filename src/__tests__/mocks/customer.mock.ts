@@ -1,11 +1,11 @@
-import { Customer } from '../../domain/interfaces/customer.interface';
-import { User } from '../../domain/interfaces/user.interface';
+import { CustomerDomain } from '../../domain/interfaces/customer.interface';
+import { UserDomain } from '../../domain/interfaces/user.interface';
 import { createUserMock } from './user.mock';
 
 export function createCustomerMock(options?: {
   deletedAt: Date | null;
-  user: User;
-}): Customer {
+  user: UserDomain;
+}): CustomerDomain {
   const user = options?.user ?? createUserMock();
 
   return {

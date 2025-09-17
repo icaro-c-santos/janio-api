@@ -1,7 +1,9 @@
-import { Product } from '../../domain/interfaces/product.interface';
+import { ProductDomain } from '../../domain/interfaces/product.interface';
 import { faker } from './faker';
 
-export function createProductMock(options?: Partial<Product>): Product {
+export function createProductMock(
+  options?: Partial<ProductDomain>,
+): ProductDomain {
   return {
     id: options?.id ?? faker.string.uuid(),
     name: options?.name ?? faker.company.name(),

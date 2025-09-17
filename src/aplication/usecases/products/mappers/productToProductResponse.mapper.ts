@@ -1,8 +1,10 @@
-import { Product } from '../../../../domain/interfaces/product.interface';
+import { ProductDomain } from '../../../../domain/interfaces/product.interface';
 import { GetProductByIdResponse } from '../types';
 
 export class ProductMapResponse {
-  public static mapProductToResponse(product: Product): GetProductByIdResponse {
+  public static mapProductToResponse(
+    product: ProductDomain,
+  ): GetProductByIdResponse {
     return {
       id: product.id,
       name: product.name,

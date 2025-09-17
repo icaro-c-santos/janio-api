@@ -1,4 +1,3 @@
-import { v4 as uuid } from 'uuid';
 import {
   ISaleRepository,
   CreateSaleData,
@@ -12,6 +11,8 @@ import {
 import { IStorageService } from '../../../domain/interfaces/storage.interface';
 import { ICustomerRepository } from '../../../domain/interfaces/customer.interface';
 import { IProductRepository } from '../../../domain/interfaces/product.interface';
+import { SaleMapResponse } from './mappers/mapSaleToSaleResponse.mapper';
+import { ReceiptService } from './services/receipt.service';
 
 export class CreateSaleUseCase implements ICreateSaleUseCase {
   constructor(
@@ -19,6 +20,7 @@ export class CreateSaleUseCase implements ICreateSaleUseCase {
     private storageService: IStorageService,
     private customerRepository: ICustomerRepository,
     private productRepository: IProductRepository,
+    private receiptService: ReceiptService,
   ) {}
 
   async execute(input: CreateSaleInput): Promise<Result<CreateSaleResponse>> {
@@ -36,7 +38,6 @@ export class CreateSaleUseCase implements ICreateSaleUseCase {
     if (!customer) {
       return {
         success: false,
-        status: 400,
         error: `Cannot find customer with id ${input.customerId}`,
       };
     }
@@ -45,7 +46,6 @@ export class CreateSaleUseCase implements ICreateSaleUseCase {
     if (!product) {
       return {
         success: false,
-        status: 400,
         error: `Cannot find product with id ${input.productId}`,
       };
     }
@@ -54,20 +54,12 @@ export class CreateSaleUseCase implements ICreateSaleUseCase {
       input.quantity,
       input.unitPrice,
     );
-    const customerName =
-      customer?.user?.company?.legalName ||
-      customer?.user?.individual?.fullName ||
-      'any';
 
-    let receiptUrl: string | null = null;
+    let receiptFileKey: string | null = null;
+    let receiptFileUrl: string | null = null;
+
     if (input.file) {
-      const key = await this.uploadReceipt({
-        file: input.file,
-        customerName,
-      });
-      receiptUrl = await this.storageService.generateDownloadUrl({
-        path: key,
-      });
+      receiptFileKey = await this.receiptService.upload(input.file, customer);
     }
 
     const saleData: CreateSaleData = {
@@ -77,59 +69,35 @@ export class CreateSaleUseCase implements ICreateSaleUseCase {
       unitPrice: input.unitPrice,
       saleDate: input.saleDate,
       totalPrice,
-      receiptUrl,
+      receiptFileKey,
     };
 
     const createdSale = await this.saleRepository.create(saleData);
 
+    if (receiptFileKey) {
+      receiptFileUrl = await this.receiptService.getUrl(receiptFileKey);
+    }
+
     return {
       success: true,
-      data: {
-        id: createdSale.id,
-        productId: createdSale.productId,
-        customerId: createdSale.customerId,
-        quantity: createdSale.quantity,
-        unitPrice: createdSale.unitPrice,
-        totalPrice: createdSale.totalPrice,
-        saleDate: createdSale.saleDate,
-        receiptUrl: createdSale.receiptUrl || null,
-        customer: createdSale.customer,
-        product: createdSale.product,
-      },
+      data: SaleMapResponse.mapSaleToResponse({
+        ...createdSale,
+        receiptFileUrl,
+      }),
     };
-  }
-
-  private async uploadReceipt({
-    file,
-    customerName,
-  }: {
-    file: Express.Multer.File;
-    customerName: string;
-  }) {
-    const uniqueId = uuid();
-    const extension = file.originalname.split('.').pop();
-    const key = `receipts/${customerName}_${uniqueId}.${extension}`;
-
-    await this.storageService.uploadFile({
-      buffer: file.buffer,
-      key,
-      contentType: file.mimetype,
-    });
-    return key;
   }
 
   private validateQuantity(quantity: number): Result<boolean> {
     if (!Number.isInteger(quantity) || quantity <= 0) {
       return {
         success: false,
-        status: 400,
+
         error: 'Quantity must be an integer and more on than zero',
       };
     }
     if (quantity > 100) {
       return {
         success: false,
-        status: 400,
         error: 'Quantity cannot exceed 100 units',
       };
     }
@@ -143,14 +111,12 @@ export class CreateSaleUseCase implements ICreateSaleUseCase {
     if (typeof unitPrice !== 'number' || unitPrice <= 0) {
       return {
         success: false,
-        status: 400,
         error: 'Unit price must be a positive number',
       };
     }
     if (unitPrice > 100000) {
       return {
         success: false,
-        status: 400,
         error: 'Unit price cannot exceed 100000',
       };
     }

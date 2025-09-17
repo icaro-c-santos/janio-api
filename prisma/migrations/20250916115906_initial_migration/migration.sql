@@ -108,7 +108,7 @@ CREATE TABLE "public"."Sale" (
     "unitPrice" DECIMAL(10,4) NOT NULL,
     "totalPrice" DECIMAL(10,4) NOT NULL,
     "saleDate" TIMESTAMP(3) NOT NULL,
-    "receiptUrl" TEXT,
+    "receiptFileKey" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),

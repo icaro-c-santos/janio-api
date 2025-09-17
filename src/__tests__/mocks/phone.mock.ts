@@ -1,8 +1,11 @@
 import { Phone as PhoneEntity } from '@prisma/client';
-import { EPhoneType, Phone } from '../../domain/interfaces/phone.interface';
+import {
+  EPhoneType,
+  PhoneDomain,
+} from '../../domain/interfaces/phone.interface';
 import { faker } from './faker';
 
-export function createPhoneMock(options?: Partial<PhoneEntity>): Phone {
+export function createPhoneMock(options?: Partial<PhoneEntity>): PhoneDomain {
   const type: EPhoneType =
     (options?.type as unknown as EPhoneType) ||
     faker.helpers.arrayElement([EPhoneType.FIXED, EPhoneType.MOBILE]);

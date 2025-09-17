@@ -1,5 +1,5 @@
 import { createCustomerMock } from '../../../__tests__/mocks/customer.mock';
-import { CustomerRepository } from '../../../infraestructure/repositories/customer.repository';
+import { CustomerRepository } from '../../../infraestructure/repositories/customers/customer.repository';
 import { GetAllCustomersUseCase } from '../customer/get-all-customers.use.case';
 import { CustomerMapResponse } from '../customer/mappers/customerToCustomeResponse.mapper';
 import { GetAllCustomersInput } from '../customer/types';

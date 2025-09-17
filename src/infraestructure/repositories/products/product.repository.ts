@@ -1,33 +1,20 @@
-import { PrismaClient, Product as ProductEntity } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import {
   IProductRepository,
-  Product,
-} from '../../domain/interfaces/product.interface';
+  ProductDomain,
+} from '../../../domain/interfaces/product.interface';
+import { ProductRepositoryMap } from './mappers/mapPrismaProductToProduct.mapper';
 
 export class ProductRepository implements IProductRepository {
   constructor(private prisma: PrismaClient) {}
 
-  async findById(id: string): Promise<Product | null> {
+  async findById(id: string): Promise<ProductDomain | null> {
     const product = await this.prisma.product.findUnique({
       where: { id, deletedAt: null },
     });
     return product
-      ? ProductRepository.mapPrismaProductToProduct(product)
+      ? ProductRepositoryMap.mapPrismaProductToProduct(product)
       : null;
-  }
-
-  private static mapPrismaProductToProduct(
-    productEntity: ProductEntity,
-  ): Product {
-    return {
-      id: productEntity.id,
-      name: productEntity.name,
-      price: Number(productEntity.price),
-      createdAt: productEntity.createdAt,
-      updatedAt: productEntity.updatedAt,
-      deletedAt: productEntity.deletedAt,
-      description: productEntity.description,
-    };
   }
 
   async getProductPriceByCustomerId({

@@ -1,7 +1,7 @@
-import { Address } from '../../../../domain/interfaces/address.interface';
-import { Customer } from '../../../../domain/interfaces/customer.interface';
+import { AddressDomain } from '../../../../domain/interfaces/address.interface';
+import { CustomerDomain } from '../../../../domain/interfaces/customer.interface';
 import {
-  Phone,
+  PhoneDomain,
   EPhoneType,
 } from '../../../../domain/interfaces/phone.interface';
 import {
@@ -11,7 +11,9 @@ import {
 } from '../types';
 
 export class CustomerMapResponse {
-  public static mapAddress(address: Address): GetAllCustomersResponseAddress {
+  public static mapAddress(
+    address: AddressDomain,
+  ): GetAllCustomersResponseAddress {
     return {
       id: address.id,
       city: address.city,
@@ -25,7 +27,7 @@ export class CustomerMapResponse {
     };
   }
 
-  public static mapPhone(phone: Phone): GetAllCustomersResponsePhone {
+  public static mapPhone(phone: PhoneDomain): GetAllCustomersResponsePhone {
     return {
       id: phone.id,
       areaCode: phone.areaCode,
@@ -37,8 +39,10 @@ export class CustomerMapResponse {
   }
 
   public static mapCustomerToResponse(
-    customer: Customer,
+    customer: CustomerDomain,
   ): GetAllCustomersResponse {
+    const primaryAddress = customer.user.addresses.find((a) => a.isPrimary);
+    const primaryPhone = customer.user.phones.find((p) => p.isPrimary);
     return {
       userId: customer.userId,
       deletedAt: customer.deletedAt,
@@ -63,13 +67,9 @@ export class CustomerMapResponse {
               deletedAt: customer.user.company.deletedAt,
             }
           : undefined,
-        primaryAddress: customer.user.addresses.find((a) => a.isPrimary)
-          ? this.mapAddress(customer.user.addresses.find((a) => a.isPrimary)!)
-          : null,
+        primaryAddress: primaryAddress ? this.mapAddress(primaryAddress) : null,
         address: customer.user.addresses.map(this.mapAddress),
-        primaryPhone: customer.user.phones.find((p) => p.isPrimary)
-          ? this.mapPhone(customer.user.phones.find((p) => p.isPrimary)!)
-          : null,
+        primaryPhone: primaryPhone ? this.mapPhone(primaryPhone) : null,
         phones: customer.user.phones.map(this.mapPhone),
         createdAt: customer.user.createdAt,
         deletedAt: customer.user.deletedAt,

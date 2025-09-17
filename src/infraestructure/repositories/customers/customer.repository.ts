@@ -1,18 +1,9 @@
+import { PrismaClient } from '@prisma/client';
 import {
-  PrismaClient,
-  Customer as CustomerEntity,
-  Company as CompanyEntity,
-  Individual as IndividualEntity,
-  User as UserEntity,
-  Address as AddressEntity,
-  Phone as PhoneEntity,
-} from '@prisma/client';
-import {
-  Customer,
   CustomerFindAllParams,
   ICustomerRepository,
-} from '../../domain/interfaces/customer.interface';
-import { UserMap } from './mappers/user.mapper';
+} from '../../../domain/interfaces/customer.interface';
+import { CustomerRepositoryMap } from './mappers/mapPrismaCustomerToCustomer.mapper';
 
 const defaultInclude = {
   user: {
@@ -41,7 +32,7 @@ export class CustomerRepository implements ICustomerRepository {
       include: defaultInclude,
     });
     if (customer)
-      return CustomerRepository.mapPrismaCustomerToCustomer(customer);
+      return CustomerRepositoryMap.mapPrismaCustomerToCustomer(customer);
 
     return null;
   }
@@ -99,25 +90,8 @@ export class CustomerRepository implements ICustomerRepository {
       take,
       skip,
       items: items.map((customer) =>
-        CustomerRepository.mapPrismaCustomerToCustomer(customer),
+        CustomerRepositoryMap.mapPrismaCustomerToCustomer(customer),
       ),
-    };
-  }
-
-  private static mapPrismaCustomerToCustomer(
-    customerEntity: CustomerEntity & {
-      user: UserEntity & {
-        individual?: IndividualEntity | null;
-        company?: CompanyEntity | null;
-        addresses: AddressEntity[];
-        phones: PhoneEntity[];
-      };
-    },
-  ): Customer {
-    return {
-      userId: customerEntity.userId,
-      deletedAt: customerEntity.deletedAt,
-      user: UserMap.mapUser(customerEntity.user),
     };
   }
 }

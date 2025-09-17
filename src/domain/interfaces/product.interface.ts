@@ -1,12 +1,12 @@
 export interface IProductRepository {
-  findById(id: string): Promise<Product | null>;
+  findById(id: string): Promise<ProductDomain | null>;
   getProductPriceByCustomerId(props: {
     customerId: string;
     productId: string;
   }): Promise<number | null>;
 }
 
-export interface Product {
+export interface ProductDomain {
   id: string;
   name: string;
   description: string | null;

@@ -2,21 +2,21 @@ import {
   RepositoryPaginatedInput,
   RepositoryPaginatedResult,
 } from './shared/types';
-import { User } from './user.interface';
+import { UserDomain } from './user.interface';
 
 export type CustomerFindAllParams = RepositoryPaginatedInput & {
   getOnlyPrimaryPhones?: boolean;
   getOnlyPrimaryAddresses?: boolean;
 };
 export interface ICustomerRepository {
-  findById(id: string): Promise<Customer | null>;
+  findById(id: string): Promise<CustomerDomain | null>;
   findAll(
     filter: CustomerFindAllParams,
-  ): Promise<RepositoryPaginatedResult<Customer>>;
+  ): Promise<RepositoryPaginatedResult<CustomerDomain>>;
 }
 
-export interface Customer {
+export interface CustomerDomain {
   userId: string;
-  user: User;
+  user: UserDomain;
   deletedAt: Date | null;
 }

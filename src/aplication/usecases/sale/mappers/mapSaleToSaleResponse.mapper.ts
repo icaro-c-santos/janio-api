@@ -1,8 +1,9 @@
-import { Sale } from '../../../../domain/interfaces/sales.interface';
-import { GetAllSalesResponse } from '../types';
+import { SaleDomain } from '../../../../domain/interfaces/sales.interface';
 
 export class SaleMapResponse {
-  public static mapSaleToResponse(sale: Sale): GetAllSalesResponse {
+  public static mapSaleToResponse(
+    sale: SaleDomain & { receiptFileUrl?: string | null },
+  ) {
     return {
       id: sale.id,
       productId: sale.productId,
@@ -11,8 +12,8 @@ export class SaleMapResponse {
       unitPrice: sale.unitPrice,
       totalPrice: sale.totalPrice,
       saleDate: sale.saleDate,
-      receiptUrl: sale.receiptUrl,
-
+      receiptFileKey: sale.receiptFileKey || null,
+      ...(sale.receiptFileUrl && { receiptFileUrl: sale.receiptFileUrl }),
       product: {
         id: sale.product.id,
         name: sale.product.name,

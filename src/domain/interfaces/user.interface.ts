@@ -1,7 +1,7 @@
-import { Address } from './address.interface';
-import { Phone } from './phone.interface';
+import { AddressDomain } from './address.interface';
+import { PhoneDomain } from './phone.interface';
 
-export interface User {
+export interface UserDomain {
   id: string;
   type: 'INDIVIDUAL' | 'COMPANY';
   email?: string;
@@ -20,6 +20,6 @@ export interface User {
   };
   createdAt: Date;
   deletedAt: Date | null;
-  phones: Phone[];
-  addresses: Address[];
+  phones: PhoneDomain[];
+  addresses: AddressDomain[];
 }
