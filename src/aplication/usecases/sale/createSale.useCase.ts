@@ -8,7 +8,6 @@ import {
   ICreateSaleUseCase,
   CreateSaleInput,
 } from './types';
-import { IStorageService } from '../../../domain/interfaces/storage.interface';
 import { ICustomerRepository } from '../../../domain/interfaces/customer.interface';
 import { IProductRepository } from '../../../domain/interfaces/product.interface';
 import { SaleMapResponse } from './mappers/mapSaleToSaleResponse.mapper';
@@ -17,7 +16,6 @@ import { ReceiptService } from './services/receipt.service';
 export class CreateSaleUseCase implements ICreateSaleUseCase {
   constructor(
     private saleRepository: ISaleRepository,
-    private storageService: IStorageService,
     private customerRepository: ICustomerRepository,
     private productRepository: IProductRepository,
     private receiptService: ReceiptService,

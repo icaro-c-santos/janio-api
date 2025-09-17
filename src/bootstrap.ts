@@ -19,6 +19,7 @@ import { S3StorageService } from './infraestructure/storage/minio-storage.servic
 import { GetAllSalesUseCase } from './aplication/usecases/sale/get-all-sales.use.case';
 import { SaleRepository } from './infraestructure/repositories/sales/sale.repository';
 import { CustomerRepository } from './infraestructure/repositories/customers/customer.repository';
+import { ReceiptService } from './aplication/usecases/sale/services/receipt.service';
 
 export async function bootstrap() {
   const app = express();
@@ -35,11 +36,12 @@ export async function bootstrap() {
   const productRepository = new ProductRepository(prisma);
 
   const checkReadinessUseCase = new CheckReadinessUseCase(storage);
+  const receiptService = new ReceiptService(storage);
   const createSaleUseCase = new CreateSaleUseCase(
     saleRepository,
-    storage,
     customerRepository,
     productRepository,
+    receiptService,
   );
   const getAllSalesUseCase = new GetAllSalesUseCase(saleRepository);
   const getAllCustomersUseCase = new GetAllCustomersUseCase(customerRepository);

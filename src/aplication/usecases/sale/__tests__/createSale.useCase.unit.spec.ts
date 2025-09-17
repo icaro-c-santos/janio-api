@@ -30,17 +30,12 @@ describe('CreateSaleUseCase', () => {
 
   beforeEach(() => {
     saleRepository = { create: jest.fn() } as any;
-    storageService = {
-      uploadFile: jest.fn(),
-      generateDownloadUrl: jest.fn(),
-    } as any;
     customerRepository = { findById: jest.fn(), findAll: jest.fn() } as any;
     productRepository = { findById: jest.fn() } as any;
     receiptService = { upload: jest.fn(), getUrl: jest.fn() } as any;
 
     createSaleUseCase = new CreateSaleUseCase(
       saleRepository,
-      storageService,
       customerRepository,
       productRepository,
       receiptService,
