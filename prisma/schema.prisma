@@ -11,13 +11,14 @@ datasource db {
 // =======================
 // USERS
 // =======================
+
 model User {
   id           String        @id @default(uuid()) @db.Uuid
   type         UserType
   email        String?       @unique
   phones       Phone[]
   addresses    Address[]
-  accesses     Access[]
+  accesses     UserAccess[] 
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   deletedAt    DateTime?
@@ -28,6 +29,7 @@ model User {
   customer     Customer?
   supplier     Supplier?
 }
+
 
 model Individual {
   userId        String   @id @db.Uuid
@@ -325,34 +327,6 @@ model AccountReceivable {
 }
 
 // =======================
-// ACCESS & ROLES
-// =======================
-enum AccessRole {
-  ADMIN
-  SUPPLIER
-  CUSTOMER
-}
-
-enum AccessStatus {
-  ACTIVE
-  SUSPENDED
-}
-
-model Access {
-  id        String      @id @default(uuid()) @db.Uuid
-  userId    String      @db.Uuid
-  role      AccessRole
-  status    AccessStatus @default(ACTIVE)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @default(now())
-  deletedAt DateTime?
-
-  user      User        @relation(fields: [userId], references: [id])
-
-  @@unique([userId, role])
-}
-
-// =======================
 // REPORTS
 // =======================
 enum ReportStatus {
@@ -375,10 +349,51 @@ model Report {
   deletedAt   DateTime?
 }
 
-// =======================
-// ENUMS
-// =======================
+
 enum UserType {
   INDIVIDUAL
   COMPANY
+}
+
+// =======================
+// ACESSO + TOKENS
+// =======================
+
+model UserAccess {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  login     String   @unique
+  password  String
+  role      AccessRole
+  status    AccessStatus @default(ACTIVE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  tokens    UserToken[]
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model UserToken {
+  id          String   @id @default(uuid()) @db.Uuid
+  accessId    String   @db.Uuid
+  token       String
+  device      String?
+  ip          String?
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  revokedAt   DateTime?
+
+  access      UserAccess @relation(fields: [accessId], references: [id])
+}
+
+enum AccessRole {
+  ADMIN
+  SUPPLIER
+  CUSTOMER
+}
+
+enum AccessStatus {
+  ACTIVE
+  SUSPENDED
 }

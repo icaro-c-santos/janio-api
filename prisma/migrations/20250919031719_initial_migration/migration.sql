@@ -14,16 +14,16 @@ CREATE TYPE "public"."InvoiceStatus" AS ENUM ('PENDING', 'PARTIAL', 'PAID', 'OVE
 CREATE TYPE "public"."AccountReceivableStatus" AS ENUM ('PENDING', 'RECEIVED', 'OVERDUE');
 
 -- CreateEnum
-CREATE TYPE "public"."AccessRole" AS ENUM ('ADMIN', 'SUPPLIER', 'CUSTOMER');
-
--- CreateEnum
-CREATE TYPE "public"."AccessStatus" AS ENUM ('ACTIVE', 'SUSPENDED');
-
--- CreateEnum
 CREATE TYPE "public"."ReportStatus" AS ENUM ('PROCESSING', 'PENDING', 'READY', 'FAILED');
 
 -- CreateEnum
 CREATE TYPE "public"."UserType" AS ENUM ('INDIVIDUAL', 'COMPANY');
+
+-- CreateEnum
+CREATE TYPE "public"."AccessRole" AS ENUM ('ADMIN', 'SUPPLIER', 'CUSTOMER');
+
+-- CreateEnum
+CREATE TYPE "public"."AccessStatus" AS ENUM ('ACTIVE', 'SUSPENDED');
 
 -- CreateTable
 CREATE TABLE "public"."User" (
@@ -290,19 +290,6 @@ CREATE TABLE "public"."AccountReceivable" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."Access" (
-    "id" UUID NOT NULL,
-    "userId" UUID NOT NULL,
-    "role" "public"."AccessRole" NOT NULL,
-    "status" "public"."AccessStatus" NOT NULL DEFAULT 'ACTIVE',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "deletedAt" TIMESTAMP(3),
-
-    CONSTRAINT "Access_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "public"."Report" (
     "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
@@ -316,6 +303,35 @@ CREATE TABLE "public"."Report" (
     "deletedAt" TIMESTAMP(3),
 
     CONSTRAINT "Report_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."UserAccess" (
+    "id" UUID NOT NULL,
+    "userId" UUID NOT NULL,
+    "login" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "role" "public"."AccessRole" NOT NULL,
+    "status" "public"."AccessStatus" NOT NULL DEFAULT 'ACTIVE',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+
+    CONSTRAINT "UserAccess_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."UserToken" (
+    "id" UUID NOT NULL,
+    "accessId" UUID NOT NULL,
+    "token" TEXT NOT NULL,
+    "device" TEXT,
+    "ip" TEXT,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "revokedAt" TIMESTAMP(3),
+
+    CONSTRAINT "UserToken_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -334,7 +350,7 @@ CREATE UNIQUE INDEX "CustomerProductPrice_customerId_productId_key" ON "public".
 CREATE UNIQUE INDEX "ExpenseType_name_key" ON "public"."ExpenseType"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Access_userId_role_key" ON "public"."Access"("userId", "role");
+CREATE UNIQUE INDEX "UserAccess_login_key" ON "public"."UserAccess"("login");
 
 -- AddForeignKey
 ALTER TABLE "public"."Individual" ADD CONSTRAINT "Individual_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -397,4 +413,7 @@ ALTER TABLE "public"."BillingPlan" ADD CONSTRAINT "BillingPlan_customerId_fkey" 
 ALTER TABLE "public"."AccountReceivable" ADD CONSTRAINT "AccountReceivable_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "public"."Invoice"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."Access" ADD CONSTRAINT "Access_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."UserAccess" ADD CONSTRAINT "UserAccess_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."UserToken" ADD CONSTRAINT "UserToken_accessId_fkey" FOREIGN KEY ("accessId") REFERENCES "public"."UserAccess"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
