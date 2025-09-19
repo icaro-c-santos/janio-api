@@ -42,6 +42,36 @@ export class SaleRepository implements ISaleRepository {
     return SaleRepositoryMap.mapPrismaSaleToSale(sale);
   }
 
+  async findById(id: string): Promise<SaleDomain | null> {
+    const sale = await this.prisma.sale.findFirst({
+      where: {
+        id,
+        deletedAt: null,
+      },
+      include: {
+        product: true,
+        customer: {
+          include: {
+            user: {
+              include: {
+                addresses: true,
+                phones: true,
+                individual: true,
+                company: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!sale) {
+      return null;
+    }
+
+    return SaleRepositoryMap.mapPrismaSaleToSale(sale);
+  }
+
   async getAll(
     filter: GetSalesFilter,
   ): Promise<RepositoryPaginatedResult<SaleDomain>> {

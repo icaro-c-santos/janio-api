@@ -18,6 +18,7 @@ import { ProductController } from './adapters/controllers/products/product.contr
 import { CustomerController } from './adapters/controllers/customers/customer.controller';
 import { S3StorageService } from './infraestructure/storage/minio-storage.service';
 import { GetAllSalesUseCase } from './aplication/usecases/sale/get-all-sales.use.case';
+import { GetSaleByIdUseCase } from './aplication/usecases/sale/getSaleById.useCase';
 import { SaleRepository } from './infraestructure/repositories/sales/sale.repository';
 import { CustomerRepository } from './infraestructure/repositories/customers/customer.repository';
 import { ReceiptService } from './aplication/usecases/sale/services/receipt.service';
@@ -45,6 +46,10 @@ export async function bootstrap() {
     receiptService,
   );
   const getAllSalesUseCase = new GetAllSalesUseCase(saleRepository);
+  const getSaleByIdUseCase = new GetSaleByIdUseCase(
+    saleRepository,
+    receiptService,
+  );
   const getAllCustomersUseCase = new GetAllCustomersUseCase(customerRepository);
   const createCustomerUseCase = new CreateCustomerUseCase(customerRepository);
 
@@ -59,6 +64,7 @@ export async function bootstrap() {
   const saleController = new SaleController(
     createSaleUseCase,
     getAllSalesUseCase,
+    getSaleByIdUseCase,
   );
 
   const customerController = new CustomerController(

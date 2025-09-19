@@ -58,6 +58,11 @@ export function registerRoutes(
     controllers.saleController.getAllSales.bind(controllers.saleController),
   );
 
+  app.get(
+    '/sales/:id',
+    controllers.saleController.getSaleById.bind(controllers.saleController),
+  );
+
   app.post(
     '/sales',
     upload.single('file'),

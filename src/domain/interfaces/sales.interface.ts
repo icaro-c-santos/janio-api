@@ -5,6 +5,7 @@ import {
 
 export interface ISaleRepository {
   create(sale: CreateSaleData): Promise<SaleDomain>;
+  findById(id: string): Promise<SaleDomain | null>;
   getAll(
     filter: GetSalesFilter,
   ): Promise<RepositoryPaginatedResult<SaleDomain>>;

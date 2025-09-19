@@ -29,12 +29,14 @@ export class UserRepositoryMap {
       company: user.company
         ? UserRepositoryMap.mapCompany(user.company)
         : undefined,
-      addresses: user.addresses.map((address) =>
-        AddressRepositoryMap.mapPrismaAddressToAddress(address),
-      ),
-      phones: user.phones.map((phone) =>
-        PhoneRepositoryMap.mapPrismaPhoneToPhone(phone),
-      ),
+      addresses:
+        user.addresses?.map((address) =>
+          AddressRepositoryMap.mapPrismaAddressToAddress(address),
+        ) || [],
+      phones:
+        user.phones?.map((phone) =>
+          PhoneRepositoryMap.mapPrismaPhoneToPhone(phone),
+        ) || [],
     };
   }
 

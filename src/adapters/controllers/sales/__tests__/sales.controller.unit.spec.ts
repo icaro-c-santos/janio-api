@@ -2,10 +2,12 @@ import { Request, Response } from 'express';
 import { SaleController } from '../sales.controller';
 import { createSaleMock } from '../../../../__tests__/mocks/sale.mock';
 import { CreateSaleUseCase } from '../../../../aplication/usecases/sale/createSale.useCase';
+import { GetSaleByIdUseCase } from '../../../../aplication/usecases/sale/getSaleById.useCase';
 import { faker } from '../../../../__tests__/mocks/faker';
 
 describe('SaleController - createSale', () => {
   let createSaleUseCase: jest.Mocked<CreateSaleUseCase>;
+  let getSaleByIdUseCase: jest.Mocked<GetSaleByIdUseCase>;
   let controller: SaleController;
   let req: Partial<Request>;
   let res: Partial<Response>;
@@ -17,7 +19,11 @@ describe('SaleController - createSale', () => {
       execute: jest.fn(),
     } as any;
 
-    controller = new SaleController(createSaleUseCase, {} as any);
+    getSaleByIdUseCase = {
+      execute: jest.fn(),
+    } as any;
+
+    controller = new SaleController(createSaleUseCase, {} as any, getSaleByIdUseCase);
 
     req = {
       body: {
@@ -326,6 +332,115 @@ describe('SaleController - createSale', () => {
       success: true,
       data: mockSale,
       message: 'Sale created successfully',
+    });
+  });
+});
+
+describe('SaleController - getSaleById', () => {
+  let createSaleUseCase: jest.Mocked<CreateSaleUseCase>;
+  let getSaleByIdUseCase: jest.Mocked<GetSaleByIdUseCase>;
+  let controller: SaleController;
+  let req: Partial<Request>;
+  let res: Partial<Response>;
+  const defaultSaleId = faker.string.uuid();
+
+  beforeEach(() => {
+    createSaleUseCase = {
+      execute: jest.fn(),
+    } as any;
+
+    getSaleByIdUseCase = {
+      execute: jest.fn(),
+    } as any;
+
+    controller = new SaleController(createSaleUseCase, {} as any, getSaleByIdUseCase);
+
+    req = {
+      params: {
+        id: defaultSaleId,
+      },
+    };
+
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+  });
+
+  it('should return 400 when id is not a valid UUID', async () => {
+    req.params = {
+      id: 'invalid-uuid',
+    };
+
+    await controller.getSaleById(req as Request, res as Response);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: 'INVALID DATA',
+        errors: expect.arrayContaining([
+          expect.objectContaining({
+            path: ['id'],
+            message: 'Invalid sale ID format',
+          }),
+        ]),
+      }),
+    );
+    expect(getSaleByIdUseCase.execute).not.toHaveBeenCalled();
+  });
+
+  it('should return 200 when sale is found successfully', async () => {
+    const mockSale = createSaleMock();
+    getSaleByIdUseCase.execute.mockResolvedValue({
+      success: true,
+      data: mockSale,
+    });
+
+    await controller.getSaleById(req as Request, res as Response);
+
+    expect(getSaleByIdUseCase.execute).toHaveBeenCalledWith({
+      id: defaultSaleId,
+    });
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      success: true,
+      data: mockSale,
+    });
+  });
+
+  it('should return 404 when sale is not found', async () => {
+    getSaleByIdUseCase.execute.mockResolvedValue({
+      success: false,
+      error: 'Sale not found',
+      status: 404,
+    });
+
+    await controller.getSaleById(req as Request, res as Response);
+
+    expect(getSaleByIdUseCase.execute).toHaveBeenCalledWith({
+      id: defaultSaleId,
+    });
+
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({
+      success: false,
+      error: 'Sale not found',
+    });
+  });
+
+  it('should return 500 when use case does not return status', async () => {
+    getSaleByIdUseCase.execute.mockResolvedValue({
+      success: false,
+      error: 'Internal server error',
+    });
+
+    await controller.getSaleById(req as Request, res as Response);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      success: false,
+      error: 'Internal server error',
     });
   });
 });
