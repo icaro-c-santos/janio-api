@@ -30,6 +30,8 @@ export class SaleRepository implements ISaleRepository {
               include: {
                 individual: true,
                 company: true,
+                phones: true,
+                addresses: true,
               },
             },
           },
@@ -69,6 +71,8 @@ export class SaleRepository implements ISaleRepository {
             include: {
               user: {
                 include: {
+                  addresses: true,
+                  phones: true,
                   individual: true,
                   company: true,
                 },

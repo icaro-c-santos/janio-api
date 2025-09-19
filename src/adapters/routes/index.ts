@@ -32,6 +32,13 @@ export function registerRoutes(
     ),
   );
 
+  app.post(
+    '/customers',
+    controllers.customerController.createCustomer.bind(
+      controllers.customerController,
+    ),
+  );
+
   app.get(
     '/products/:productId/price/:customerId/',
     controllers.productController.getProductPriceByCustomer.bind(

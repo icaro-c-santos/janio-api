@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import {
+  CreateCustomerData,
   CustomerFindAllParams,
   ICustomerRepository,
 } from '../../../domain/interfaces/customer.interface';
@@ -38,7 +39,33 @@ export class CustomerRepository implements ICustomerRepository {
   }
 
   async findAll(filter: CustomerFindAllParams) {
-    const { skip, take } = filter;
+    const { skip, take, email, cpf, cnpj } = filter;
+
+    const whereConditions: any = { deletedAt: null };
+
+    if (email || cpf || cnpj) {
+      whereConditions.user = {
+        deletedAt: null,
+      };
+
+      if (email) {
+        whereConditions.user.email = email;
+      }
+
+      if (cpf) {
+        whereConditions.user.individual = {
+          cpf,
+          deletedAt: null,
+        };
+      }
+
+      if (cnpj) {
+        whereConditions.user.company = {
+          cnpj,
+          deletedAt: null,
+        };
+      }
+    }
 
     const addressesQuery = filter.getOnlyPrimaryAddresses
       ? {
@@ -59,7 +86,7 @@ export class CustomerRepository implements ICustomerRepository {
       : true;
     const [items, total] = await Promise.all([
       this.prisma.customer.findMany({
-        where: { deletedAt: null },
+        where: whereConditions,
         include: {
           user: {
             include: {
@@ -82,7 +109,7 @@ export class CustomerRepository implements ICustomerRepository {
         take,
       }),
       this.prisma.customer.count({
-        where: { deletedAt: null },
+        where: whereConditions,
       }),
     ]);
     return {
@@ -93,5 +120,60 @@ export class CustomerRepository implements ICustomerRepository {
         CustomerRepositoryMap.mapPrismaCustomerToCustomer(customer),
       ),
     };
+  }
+
+  async create(customer: CreateCustomerData) {
+    const newCustomer = await this.prisma.customer.create({
+      data: {
+        user: {
+          create: {
+            type: customer.user.type,
+            email: customer.user.email,
+            individual: customer.user.individual
+              ? {
+                  create: {
+                    cpf: customer.user.individual.cpf,
+                    fullName: customer.user.individual.fullName,
+                    birthDate: customer.user.individual.birthDate,
+                  },
+                }
+              : undefined,
+            company: customer.user.company
+              ? {
+                  create: {
+                    cnpj: customer.user.company.cnpj,
+                    legalName: customer.user.company.legalName,
+                    tradeName: customer.user.company.tradeName,
+                    stateRegistration: customer.user.company.stateRegistration,
+                  },
+                }
+              : undefined,
+            addresses: {
+              create: {
+                street: customer.user.address.street,
+                number: customer.user.address.number,
+                district: customer.user.address.district,
+                city: customer.user.address.city,
+                state: customer.user.address.state,
+                postalCode: customer.user.address.postalCode,
+                country: customer.user.address.country,
+                isPrimary: customer.user.address.isPrimary,
+              },
+            },
+            phones: {
+              create: {
+                areaCode: customer.user.phone.areaCode,
+                number: customer.user.phone.number,
+                isPrimary: customer.user.phone.isPrimary,
+                isWhatsapp: customer.user.phone.isWhatsapp,
+                type: customer.user.phone.type,
+              },
+            },
+          },
+        },
+      },
+      include: defaultInclude,
+    });
+    return CustomerRepositoryMap.mapPrismaCustomerToCustomer(newCustomer);
   }
 }

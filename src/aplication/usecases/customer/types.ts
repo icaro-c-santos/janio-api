@@ -1,5 +1,6 @@
 import { PaginatedResult } from '../shared/types';
 import { Result } from '../../types/result';
+import { EPhoneType } from '../../../domain/interfaces/phone.interface';
 
 export interface GetAllCustomersInput {
   page?: number;
@@ -60,4 +61,55 @@ export interface IGetAllCustomersUseCase {
   execute(
     input: GetAllCustomersInput,
   ): Promise<Result<PaginatedResult<GetAllCustomersResponse>>>;
+}
+
+export interface CreateCustomerBaseUser {
+  email: string;
+  address: {
+    city: string;
+    country: string;
+    district: string;
+    state: string;
+    number: string;
+    street: string;
+    postalCode: string;
+  };
+  phone: {
+    areaCode: string;
+    isWhatsapp: boolean;
+    type: EPhoneType;
+    number: string;
+  };
+}
+
+export interface CreateCustomerIndividualUser extends CreateCustomerBaseUser {
+  type: 'INDIVIDUAL';
+  individual: {
+    cpf: string;
+    fullName: string;
+    birthDate?: Date;
+  };
+  company?: never;
+}
+
+export interface CreateCustomerCompanyUser extends CreateCustomerBaseUser {
+  type: 'COMPANY';
+  company: {
+    cnpj: string;
+    legalName: string;
+    tradeName: string;
+    stateRegistration: string;
+  };
+  individual?: never;
+}
+
+export type CreateCustomerInput = {
+  user: CreateCustomerIndividualUser | CreateCustomerCompanyUser;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface CreateCustomerResponse extends GetAllCustomersResponse {}
+
+export interface ICreateCustomerUseCase {
+  execute(input: CreateCustomerInput): Promise<Result<CreateCustomerResponse>>;
 }

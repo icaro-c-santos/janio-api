@@ -2,10 +2,12 @@ import { Request, Response } from 'express';
 import { CustomerController } from '../customer.controller';
 import { createCustomerMock } from '../../../../__tests__/mocks/customer.mock';
 import { GetAllCustomersUseCase } from '../../../../aplication/usecases/customer/get-all-customers.use.case';
+import { CreateCustomerUseCase } from '../../../../aplication/usecases/customer/create-customer.use.case';
 import { CustomerMapResponse } from '../../../../aplication/usecases/customer/mappers/customerToCustomeResponse.mapper';
 
 describe('CustomerController - getAllCustomers', () => {
   let getAllCustomersUseCase: jest.Mocked<GetAllCustomersUseCase>;
+  let createCustomerUseCase: jest.Mocked<CreateCustomerUseCase>;
   let controller: CustomerController;
   let req: Partial<Request>;
   let res: Partial<Response>;
@@ -15,7 +17,11 @@ describe('CustomerController - getAllCustomers', () => {
       execute: jest.fn(),
     } as any;
 
-    controller = new CustomerController(getAllCustomersUseCase);
+    createCustomerUseCase = {
+      execute: jest.fn(),
+    } as any;
+
+    controller = new CustomerController(getAllCustomersUseCase, createCustomerUseCase);
 
     req = {
       query: {

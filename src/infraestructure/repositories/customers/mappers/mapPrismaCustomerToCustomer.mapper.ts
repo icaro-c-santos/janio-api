@@ -7,7 +7,7 @@ import {
   Phone as PhoneEntity,
 } from '@prisma/client';
 import { CustomerDomain } from '../../../../domain/interfaces/customer.interface';
-import { UserMap } from '../../shared/mappers/mapPrismaUserToUser.mapper';
+import { UserRepositoryMap } from '../../shared/mappers/mapPrismaUserToUser.mapper';
 
 export class CustomerRepositoryMap {
   public static mapPrismaCustomerToCustomer(
@@ -23,7 +23,11 @@ export class CustomerRepositoryMap {
     return {
       userId: customerEntity.userId,
       deletedAt: customerEntity.deletedAt,
-      user: UserMap.mapUser(customerEntity.user),
+      user: UserRepositoryMap.mapPrismaUserToUser({
+        ...customerEntity.user,
+        individual: customerEntity.user.individual ?? undefined,
+        company: customerEntity.user.company ?? undefined,
+      }),
     };
   }
 }

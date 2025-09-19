@@ -11,6 +11,7 @@ import { ProductRepository } from './infraestructure/repositories/products/produ
 import { CheckReadinessController } from './adapters/controllers/readliness/checkReadliness.controller';
 import { CheckReadinessUseCase } from './aplication/usecases/readlliness/check-readliness.useCase';
 import { GetAllCustomersUseCase } from './aplication/usecases/customer/get-all-customers.use.case';
+import { CreateCustomerUseCase } from './aplication/usecases/customer/create-customer.use.case';
 import { GetProductByIdUseCase } from './aplication/usecases/products/get-product-by-id.use.case';
 import { GetProductPriceByCustomerIdUseCase } from './aplication/usecases/products/get-product-price-by-custormer.use-case';
 import { ProductController } from './adapters/controllers/products/product.controller';
@@ -23,7 +24,7 @@ import { ReceiptService } from './aplication/usecases/sale/services/receipt.serv
 
 export async function bootstrap() {
   const app = express();
-
+  app.use(express.json());
   app.use(
     cors({
       origin: '*',
@@ -45,6 +46,7 @@ export async function bootstrap() {
   );
   const getAllSalesUseCase = new GetAllSalesUseCase(saleRepository);
   const getAllCustomersUseCase = new GetAllCustomersUseCase(customerRepository);
+  const createCustomerUseCase = new CreateCustomerUseCase(customerRepository);
 
   const getProductByIdUseCase = new GetProductByIdUseCase(productRepository);
 
@@ -59,7 +61,10 @@ export async function bootstrap() {
     getAllSalesUseCase,
   );
 
-  const customerController = new CustomerController(getAllCustomersUseCase);
+  const customerController = new CustomerController(
+    getAllCustomersUseCase,
+    createCustomerUseCase,
+  );
 
   const productController = new ProductController(
     getProductByIdUseCase,
