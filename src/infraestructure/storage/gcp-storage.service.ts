@@ -1,5 +1,5 @@
 import { Bucket, Storage } from '@google-cloud/storage';
-import { IStorageService } from '../../domain/interfaces/storage.interface';
+import { IStorageService } from '../../modules/users/domain/storage.interface';
 
 export class GCPStorageService implements IStorageService {
   private readonly storage: Storage;

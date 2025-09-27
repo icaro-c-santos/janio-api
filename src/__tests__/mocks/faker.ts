@@ -1,3 +1,5 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-bitwise */
 const mockFaker = {
   helpers: {
     arrayElement: <T>(array: T[]): T => {

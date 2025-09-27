@@ -1,9 +1,10 @@
 import { Express } from 'express';
 import multer from 'multer';
-import { SaleController } from '../controllers/sales/sales.controller';
-import { CheckReadinessController } from '../controllers/readliness/checkReadliness.controller';
-import { ProductController } from '../controllers/products/product.controller';
-import { CustomerController } from '../controllers/customers/customer.controller';
+import { SaleController } from '../../modules/sales/controller/sales.controller';
+
+import { ProductController } from '../../modules/products/controller/product.controller';
+import { CustomerController } from '../../modules/customers/controller/customer.controller';
+import { CheckReadinessController } from '../../modules/readlliness/controllers/checkReadliness.controller';
 
 export const upload = multer({
   storage: multer.memoryStorage(),

@@ -1,4 +1,4 @@
-import { CreateSaleResponse } from '../../aplication/usecases/sale/types';
+import { CreateSaleResponse } from '../../modules/sales/types';
 import { createCustomerMock } from './customer.mock';
 import { faker } from './faker';
 import { createProductMock } from './product.mock';

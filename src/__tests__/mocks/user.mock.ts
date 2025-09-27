@@ -1,7 +1,7 @@
 import { addYears } from 'date-fns';
 import { faker } from './faker';
 import { createPhoneMock } from './phone.mock';
-import { UserDomain } from '../../domain/interfaces/user.interface';
+import { UserDomain } from '../../modules/users/domain/user.interface';
 
 const generateRandomCpf = () => {
   const random = (n: number) => Math.floor(Math.random() * n);

@@ -1,5 +1,5 @@
-import { CustomerDomain } from '../../domain/interfaces/customer.interface';
-import { UserDomain } from '../../domain/interfaces/user.interface';
+import { CustomerDomain } from '../../modules/customers/domain/customer.interface';
+import { UserDomain } from '../../modules/users/domain/user.interface';
 import { createUserMock } from './user.mock';
 
 export function createCustomerMock(options?: {

@@ -2,7 +2,7 @@ import { Phone as PhoneEntity } from '@prisma/client';
 import {
   EPhoneType,
   PhoneDomain,
-} from '../../domain/interfaces/phone.interface';
+} from '../../modules/users/domain/phone.interface';
 import { faker } from './faker';
 
 export function createPhoneMock(options?: Partial<PhoneEntity>): PhoneDomain {

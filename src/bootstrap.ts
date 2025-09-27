@@ -1,27 +1,25 @@
 import express from 'express';
 import cors from 'cors';
 import { registerRoutes } from './adapters/routes';
-import { SaleController } from './adapters/controllers/sales/sales.controller';
-import { CreateSaleUseCase } from './aplication/usecases/sale/createSale.useCase';
-
+import { SaleController } from './modules/sales/controller/sales.controller';
 import { appConfig } from './config';
 import { prisma } from './infraestructure/db/prisma-client';
-
-import { ProductRepository } from './infraestructure/repositories/products/product.repository';
-import { CheckReadinessController } from './adapters/controllers/readliness/checkReadliness.controller';
-import { CheckReadinessUseCase } from './aplication/usecases/readlliness/check-readliness.useCase';
-import { GetAllCustomersUseCase } from './aplication/usecases/customer/get-all-customers.use.case';
-import { CreateCustomerUseCase } from './aplication/usecases/customer/create-customer.use.case';
-import { GetProductByIdUseCase } from './aplication/usecases/products/get-product-by-id.use.case';
-import { GetProductPriceByCustomerIdUseCase } from './aplication/usecases/products/get-product-price-by-custormer.use-case';
-import { ProductController } from './adapters/controllers/products/product.controller';
-import { CustomerController } from './adapters/controllers/customers/customer.controller';
+import { ProductRepository } from './modules/products/repository/product.repository';
 import { S3StorageService } from './infraestructure/storage/minio-storage.service';
-import { GetAllSalesUseCase } from './aplication/usecases/sale/get-all-sales.use.case';
-import { GetSaleByIdUseCase } from './aplication/usecases/sale/getSaleById.useCase';
-import { SaleRepository } from './infraestructure/repositories/sales/sale.repository';
-import { CustomerRepository } from './infraestructure/repositories/customers/customer.repository';
-import { ReceiptService } from './aplication/usecases/sale/services/receipt.service';
+import { SaleRepository } from './modules/sales/repository/sale.repository';
+import { CustomerRepository } from './modules/customers/repository/customer.repository';
+import { CheckReadinessUseCase } from './modules/readlliness/usecases/check-readliness.useCase';
+import { ReceiptService } from './modules/sales/services/receipt.service';
+import { CreateSaleUseCase } from './modules/sales/usecases/createSale.useCase';
+import { GetAllSalesUseCase } from './modules/sales/usecases/get-all-sales.use.case';
+import { GetSaleByIdUseCase } from './modules/sales/usecases/getSaleById.useCase';
+import { GetAllCustomersUseCase } from './modules/customers/usecases/get-all-customers.use.case';
+import { CreateCustomerUseCase } from './modules/customers/usecases/create-customer.use.case';
+import { GetProductByIdUseCase } from './modules/products/usecases/get-product-by-id.use.case';
+import { GetProductPriceByCustomerIdUseCase } from './modules/products/usecases/get-product-price-by-custormer.use-case';
+import { CheckReadinessController } from './modules/readlliness/controllers/checkReadliness.controller';
+import { ProductController } from './modules/products/controller/product.controller';
+import { CustomerController } from './modules/customers/controller/customer.controller';
 
 export async function bootstrap() {
   const app = express();

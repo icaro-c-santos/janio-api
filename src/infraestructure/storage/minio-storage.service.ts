@@ -1,5 +1,5 @@
 import { S3 } from 'aws-sdk';
-import { IStorageService } from '../../domain/interfaces/storage.interface';
+import { IStorageService } from '../../modules/users/domain/storage.interface';
 import { appConfig } from '../../config';
 
 interface UploadParams {

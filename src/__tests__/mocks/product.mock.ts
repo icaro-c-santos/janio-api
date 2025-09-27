@@ -1,4 +1,4 @@
-import { ProductDomain } from '../../domain/interfaces/product.interface';
+import { ProductDomain } from '../../modules/products/domain/product.interface';
 import { faker } from './faker';
 
 export function createProductMock(
