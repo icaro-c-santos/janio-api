@@ -143,6 +143,7 @@ model Sale {
 
   product        Product   @relation(fields: [productId], references: [id])
   customer       Customer  @relation(fields: [customerId], references: [userId])
+  receivables    AccountReceivable[]
 }
 
 // =======================
@@ -319,11 +320,14 @@ model AccountReceivable {
   id          String                  @id @default(uuid()) @db.Uuid
   amount      Decimal                 @db.Decimal(10,2)
   status      AccountReceivableStatus @default(PENDING)
+  saleId      String?                 @db.Uuid 
   createdAt   DateTime                @default(now())
   updatedAt   DateTime                @default(now())
+  metadata    Json? 
 
   invoiceId  String                   @db.Uuid
   invoice    Invoice                  @relation(fields: [invoiceId], references: [id])
+  sale       Sale?                    @relation(fields: [saleId], references: [id])
 }
 
 // =======================

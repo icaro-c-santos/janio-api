@@ -282,8 +282,10 @@ CREATE TABLE "public"."AccountReceivable" (
     "id" UUID NOT NULL,
     "amount" DECIMAL(10,2) NOT NULL,
     "status" "public"."AccountReceivableStatus" NOT NULL DEFAULT 'PENDING',
+    "saleId" UUID,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "metadata" JSONB,
     "invoiceId" UUID NOT NULL,
 
     CONSTRAINT "AccountReceivable_pkey" PRIMARY KEY ("id")
@@ -411,6 +413,9 @@ ALTER TABLE "public"."BillingPlan" ADD CONSTRAINT "BillingPlan_customerId_fkey" 
 
 -- AddForeignKey
 ALTER TABLE "public"."AccountReceivable" ADD CONSTRAINT "AccountReceivable_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "public"."Invoice"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."AccountReceivable" ADD CONSTRAINT "AccountReceivable_saleId_fkey" FOREIGN KEY ("saleId") REFERENCES "public"."Sale"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."UserAccess" ADD CONSTRAINT "UserAccess_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
