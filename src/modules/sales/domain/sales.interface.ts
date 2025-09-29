@@ -1,9 +1,11 @@
+import { PrismaClient } from '@prisma/client';
 import {
   RepositoryPaginatedInput,
   RepositoryPaginatedResult,
 } from '../../shared/types/repository';
 
 export interface ISaleRepository {
+  withTransaction(tx: PrismaClient): ISaleRepository;
   create(sale: CreateSaleData): Promise<SaleDomain>;
   findById(id: string): Promise<SaleDomain | null>;
   getAll(

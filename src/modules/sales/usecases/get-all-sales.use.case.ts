@@ -1,4 +1,3 @@
-import { Result } from '../../shared/types/result';
 import { SaleMapResponse } from './mappers/mapSaleToSaleResponse.mapper';
 import {
   GetAllSalesInput,
@@ -15,7 +14,7 @@ export class GetAllSalesUseCase implements IGetAllSalesUseCase {
 
   async execute(
     input?: GetAllSalesInput,
-  ): Promise<Result<PaginatedResult<GetAllSalesResponse>>> {
+  ): Promise<PaginatedResult<GetAllSalesResponse>> {
     const take = input?.pageSize ?? DEFAULT_PAGE_SIZE;
     const skip = ((input?.page ?? DEFAULT_PAGE) - 1) * take;
 
@@ -29,13 +28,10 @@ export class GetAllSalesUseCase implements IGetAllSalesUseCase {
     });
     const page = data.skip / data.take + 1;
     return {
-      success: true,
-      data: {
-        pageSize: data.skip,
-        total: data.total,
-        page,
-        items: data.items.map(SaleMapResponse.mapSaleToResponse),
-      },
+      pageSize: data.skip,
+      total: data.total,
+      page,
+      items: data.items.map(SaleMapResponse.mapSaleToResponse),
     };
   }
 }

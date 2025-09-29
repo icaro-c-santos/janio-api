@@ -35,18 +35,10 @@ export class SaleController {
 
     const result = await this.createSaleUseCase.execute(request);
 
-    if (result.success) {
-      return res.status(201).json({
-        success: true,
-        data: result.data,
-        message: 'Sale created successfully',
-      });
-    }
-
-    const statusCode = result?.status || 500;
-    return res.status(statusCode).json({
-      success: false,
-      error: result.error,
+    return res.status(201).json({
+      success: true,
+      data: result,
+      message: 'Sale created successfully',
     });
   }
 
@@ -63,32 +55,18 @@ export class SaleController {
       id: validatedData.data.id,
     });
 
-    if (result.success) {
-      return res.status(200).json({
-        success: true,
-        data: result.data,
-      });
-    }
-
-    const statusCode = result?.status || 500;
-    return res.status(statusCode).json({
-      success: false,
-      error: result.error,
+    return res.status(200).json({
+      success: true,
+      data: result,
     });
   }
 
   async getAllSales(req: Request, res: Response) {
     const result = await this.getAllSalesUseCase.execute({});
 
-    if (!result.success) {
-      return res.status(400).json({
-        error: result.error,
-      });
-    }
-
     return res.status(200).json({
       success: true,
-      data: result.data,
+      data: result,
     });
   }
 }

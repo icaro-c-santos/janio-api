@@ -1,7 +1,6 @@
 import { SaleMapResponse } from './mappers/mapSaleToSaleResponse.mapper';
 import { ReceiptService } from '../services/receipt.service';
 import { ISaleRepository, SaleDomain } from '../domain/sales.interface';
-import { Result } from '../../shared/types/result';
 import { IGetSaleByIdUseCase } from '../types';
 
 export interface GetSaleByIdInput {
@@ -14,15 +13,11 @@ export class GetSaleByIdUseCase implements IGetSaleByIdUseCase {
     private receiptService: ReceiptService,
   ) {}
 
-  async execute(input: GetSaleByIdInput): Promise<Result<SaleDomain>> {
+  async execute(input: GetSaleByIdInput): Promise<SaleDomain> {
     const sale = await this.saleRepository.findById(input.id);
 
     if (!sale) {
-      return {
-        success: false,
-        error: 'Sale not found',
-        status: 404,
-      };
+      throw new Error('Sale not found');
     }
 
     let receiptFileUrl: string | null = null;
@@ -35,9 +30,6 @@ export class GetSaleByIdUseCase implements IGetSaleByIdUseCase {
       receiptFileUrl,
     });
 
-    return {
-      success: true,
-      data: saleResponse,
-    };
+    return saleResponse;
   }
 }

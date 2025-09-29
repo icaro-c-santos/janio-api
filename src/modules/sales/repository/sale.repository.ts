@@ -11,6 +11,10 @@ import { RepositoryPaginatedResult } from '../../shared/types/repository';
 export class SaleRepository implements ISaleRepository {
   constructor(private prisma: PrismaClient) {}
 
+  withTransaction(tx: PrismaClient): ISaleRepository {
+    return new SaleRepository(tx);
+  }
+
   async create(saleData: CreateSaleData): Promise<SaleDomain> {
     const sale = await this.prisma.sale.create({
       data: {

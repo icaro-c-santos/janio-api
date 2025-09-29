@@ -250,6 +250,7 @@ CREATE TABLE "public"."Expense" (
 CREATE TABLE "public"."BillingPlan" (
     "id" UUID NOT NULL,
     "customerId" UUID NOT NULL,
+    "productId" UUID NOT NULL,
     "cycle" "public"."BillingCycle" NOT NULL,
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3),
@@ -285,6 +286,7 @@ CREATE TABLE "public"."AccountReceivable" (
     "saleId" UUID,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "expectedDate" TIMESTAMP(3),
     "metadata" JSONB,
     "invoiceId" UUID NOT NULL,
 
@@ -352,6 +354,9 @@ CREATE UNIQUE INDEX "CustomerProductPrice_customerId_productId_key" ON "public".
 CREATE UNIQUE INDEX "ExpenseType_name_key" ON "public"."ExpenseType"("name");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "BillingPlan_customerId_productId_key" ON "public"."BillingPlan"("customerId", "productId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "UserAccess_login_key" ON "public"."UserAccess"("login");
 
 -- AddForeignKey
@@ -410,6 +415,9 @@ ALTER TABLE "public"."Expense" ADD CONSTRAINT "Expense_expenseTypeId_fkey" FOREI
 
 -- AddForeignKey
 ALTER TABLE "public"."BillingPlan" ADD CONSTRAINT "BillingPlan_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "public"."Customer"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."BillingPlan" ADD CONSTRAINT "BillingPlan_productId_fkey" FOREIGN KEY ("productId") REFERENCES "public"."Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."AccountReceivable" ADD CONSTRAINT "AccountReceivable_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "public"."Invoice"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

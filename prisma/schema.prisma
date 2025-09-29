@@ -113,6 +113,7 @@ model Product {
   deletedAt       DateTime?
   sales           Sale[]
   customerPrices  CustomerProductPrice[]
+  billingPlans    BillingPlan[]
 }
 
 model CustomerProductPrice {
@@ -275,6 +276,7 @@ enum BillingCycle {
 model BillingPlan {
   id          String       @id @default(uuid()) @db.Uuid
   customerId  String       @db.Uuid
+  productId   String       @db.Uuid
   cycle       BillingCycle
   startDate   DateTime
   endDate     DateTime?
@@ -283,6 +285,9 @@ model BillingPlan {
   updatedAt   DateTime     @default(now())
 
   customer    Customer     @relation(fields: [customerId], references: [userId])
+  product     Product      @relation(fields: [productId], references: [id])
+
+  @@unique([customerId, productId])
 }
 
 enum InvoiceStatus {
@@ -323,6 +328,7 @@ model AccountReceivable {
   saleId      String?                 @db.Uuid 
   createdAt   DateTime                @default(now())
   updatedAt   DateTime                @default(now())
+  expectedDate DateTime?              
   metadata    Json? 
 
   invoiceId  String                   @db.Uuid

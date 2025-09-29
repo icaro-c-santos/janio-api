@@ -1,4 +1,3 @@
-import { Result } from '../shared/types/result';
 import { PaginatedResult } from '../shared/types/pagination';
 import { GetSaleByIdInput } from './controller/schemas/getSaleById.schema';
 import { SaleDomain } from './domain/sales.interface';
@@ -48,7 +47,7 @@ export interface CreateSaleResponse {
   };
 }
 export interface ICreateSaleUseCase {
-  execute(input: CreateSaleInput): Promise<Result<CreateSaleResponse>>;
+  execute(input: CreateSaleInput): Promise<CreateSaleResponse>;
 }
 export interface GetAllSalesInput {
   page?: number;
@@ -96,9 +95,9 @@ export interface GetAllSalesResponse {
 export interface IGetAllSalesUseCase {
   execute(
     filter: GetAllSalesInput,
-  ): Promise<Result<PaginatedResult<GetAllSalesResponse>>>;
+  ): Promise<PaginatedResult<GetAllSalesResponse>>;
 }
 
 export interface IGetSaleByIdUseCase {
-  execute(input: GetSaleByIdInput): Promise<Result<SaleDomain>>;
+  execute(input: GetSaleByIdInput): Promise<SaleDomain>;
 }
