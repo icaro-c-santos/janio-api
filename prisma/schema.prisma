@@ -139,7 +139,7 @@ model Sale {
   saleDate       DateTime
   receiptFileKey String?
   createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
   deletedAt      DateTime?
 
   product        Product   @relation(fields: [productId], references: [id])
@@ -168,7 +168,7 @@ model Inventory {
   itemId    String                 @db.Uuid
   quantity  Decimal                @default(0)
   createdAt DateTime               @default(now())
-  updatedAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
 
   item      InventoryWarehouseItem @relation(fields: [itemId], references: [id])
 }
@@ -179,7 +179,7 @@ model Warehouse {
   quantity   Decimal                @default(0)
   description String?
   createdAt  DateTime               @default(now())
-  updatedAt  DateTime               @default(now())
+  updatedAt  DateTime               @updatedAt
 
   item       InventoryWarehouseItem @relation(fields: [itemId], references: [id])
 }
@@ -224,7 +224,7 @@ model AccountPayable {
   dueDate                DateTime
   status                 AccountPayableStatus @default(PENDING)
   createdAt              DateTime     @default(now())
-  updatedAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
   deletedAt              DateTime?
 
   expenseId             String?       @db.Uuid
@@ -257,7 +257,7 @@ model Expense {
   description    String
   totalValue     Decimal      @db.Decimal(10,2)
   createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
   receiptFileKey  String?
 
   expenseType    ExpenseType  @relation(fields: [expenseTypeId], references: [id])
@@ -282,7 +282,7 @@ model BillingPlan {
   endDate     DateTime?
   dueDay      Int?
   createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
   customer    Customer     @relation(fields: [customerId], references: [userId])
   product     Product      @relation(fields: [productId], references: [id])
@@ -309,7 +309,7 @@ model Invoice {
   metadata      Json?
 
   createdAt     DateTime            @default(now())
-  updatedAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
   deletedAt     DateTime?
 
   receivables   AccountReceivable[]
@@ -327,7 +327,7 @@ model AccountReceivable {
   status      AccountReceivableStatus @default(PENDING)
   saleId      String?                 @db.Uuid 
   createdAt   DateTime                @default(now())
-  updatedAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
   expectedDate DateTime?              
   metadata    Json? 
 
@@ -346,16 +346,28 @@ enum ReportStatus {
   FAILED
 }
 
+enum ReportType {
+  DRE_MENSAL
+  DRE_ANUAL
+  VENDAS_MENSAL_POR_CLIENTE
+  VENDAS_MENSAL_GERAL
+  VENDAS_ANUAL_POR_CLIENTE
+  VENDAS_ANUAL_GERAL
+  ESTOQUE_MENSAL
+  ESTOQUE_ANUAL
+}
+
 model Report {
   id          String        @id @default(uuid()) @db.Uuid
   name        String
   description String?
-  type        String
+  type        ReportType
   status      ReportStatus  @default(PENDING)
   fileKey     String?
   requestedBy String?
+  metadata    Json?
   createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
   deletedAt   DateTime?
 }
 

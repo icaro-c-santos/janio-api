@@ -17,6 +17,9 @@ CREATE TYPE "public"."AccountReceivableStatus" AS ENUM ('PENDING', 'RECEIVED', '
 CREATE TYPE "public"."ReportStatus" AS ENUM ('PROCESSING', 'PENDING', 'READY', 'FAILED');
 
 -- CreateEnum
+CREATE TYPE "public"."ReportType" AS ENUM ('DRE_MENSAL', 'DRE_ANUAL', 'VENDAS_MENSAL_POR_CLIENTE', 'VENDAS_MENSAL_GERAL', 'VENDAS_ANUAL_POR_CLIENTE', 'VENDAS_ANUAL_GERAL', 'ESTOQUE_MENSAL', 'ESTOQUE_ANUAL');
+
+-- CreateEnum
 CREATE TYPE "public"."UserType" AS ENUM ('INDIVIDUAL', 'COMPANY');
 
 -- CreateEnum
@@ -142,7 +145,7 @@ CREATE TABLE "public"."Sale" (
     "saleDate" TIMESTAMP(3) NOT NULL,
     "receiptFileKey" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
 
     CONSTRAINT "Sale_pkey" PRIMARY KEY ("id")
@@ -166,7 +169,7 @@ CREATE TABLE "public"."Inventory" (
     "itemId" UUID NOT NULL,
     "quantity" DECIMAL(65,30) NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Inventory_pkey" PRIMARY KEY ("id")
 );
@@ -178,7 +181,7 @@ CREATE TABLE "public"."Warehouse" (
     "quantity" DECIMAL(65,30) NOT NULL DEFAULT 0,
     "description" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Warehouse_pkey" PRIMARY KEY ("id")
 );
@@ -214,7 +217,7 @@ CREATE TABLE "public"."AccountPayable" (
     "dueDate" TIMESTAMP(3) NOT NULL,
     "status" "public"."AccountPayableStatus" NOT NULL DEFAULT 'PENDING',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
     "expenseId" UUID,
     "supplyReceiptId" UUID,
@@ -240,7 +243,7 @@ CREATE TABLE "public"."Expense" (
     "description" TEXT NOT NULL,
     "totalValue" DECIMAL(10,2) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "receiptFileKey" TEXT,
 
     CONSTRAINT "Expense_pkey" PRIMARY KEY ("id")
@@ -256,7 +259,7 @@ CREATE TABLE "public"."BillingPlan" (
     "endDate" TIMESTAMP(3),
     "dueDay" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "BillingPlan_pkey" PRIMARY KEY ("id")
 );
@@ -272,7 +275,7 @@ CREATE TABLE "public"."Invoice" (
     "status" "public"."InvoiceStatus" NOT NULL DEFAULT 'PENDING',
     "metadata" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
 
     CONSTRAINT "Invoice_pkey" PRIMARY KEY ("id")
@@ -285,7 +288,7 @@ CREATE TABLE "public"."AccountReceivable" (
     "status" "public"."AccountReceivableStatus" NOT NULL DEFAULT 'PENDING',
     "saleId" UUID,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "expectedDate" TIMESTAMP(3),
     "metadata" JSONB,
     "invoiceId" UUID NOT NULL,
@@ -298,12 +301,13 @@ CREATE TABLE "public"."Report" (
     "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
-    "type" TEXT NOT NULL,
+    "type" "public"."ReportType" NOT NULL,
     "status" "public"."ReportStatus" NOT NULL DEFAULT 'PENDING',
     "fileKey" TEXT,
     "requestedBy" TEXT,
+    "metadata" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
 
     CONSTRAINT "Report_pkey" PRIMARY KEY ("id")
