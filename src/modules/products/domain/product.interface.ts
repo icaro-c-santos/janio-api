@@ -1,5 +1,6 @@
 export interface IProductRepository {
   findById(id: string): Promise<ProductDomain | null>;
+  findAll(): Promise<ProductDomain[]>;
   getProductPriceByCustomerId(props: {
     customerId: string;
     productId: string;

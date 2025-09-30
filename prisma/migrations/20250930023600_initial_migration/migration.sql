@@ -271,6 +271,7 @@ CREATE TABLE "public"."Invoice" (
     "periodEnd" TIMESTAMP(3) NOT NULL,
     "description" TEXT,
     "totalValue" DECIMAL(10,2) NOT NULL,
+    "totalPaid" DECIMAL(10,2) DEFAULT 0,
     "dueDate" TIMESTAMP(3) NOT NULL,
     "status" "public"."InvoiceStatus" NOT NULL DEFAULT 'PENDING',
     "metadata" JSONB,
@@ -291,7 +292,7 @@ CREATE TABLE "public"."AccountReceivable" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "expectedDate" TIMESTAMP(3),
     "metadata" JSONB,
-    "invoiceId" UUID NOT NULL,
+    "invoiceId" UUID,
 
     CONSTRAINT "AccountReceivable_pkey" PRIMARY KEY ("id")
 );
@@ -342,6 +343,14 @@ CREATE TABLE "public"."UserToken" (
     CONSTRAINT "UserToken_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "public"."_InvoiceAccounts" (
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL,
+
+    CONSTRAINT "_InvoiceAccounts_AB_pkey" PRIMARY KEY ("A","B")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "public"."User"("email");
 
@@ -362,6 +371,9 @@ CREATE UNIQUE INDEX "BillingPlan_customerId_productId_key" ON "public"."BillingP
 
 -- CreateIndex
 CREATE UNIQUE INDEX "UserAccess_login_key" ON "public"."UserAccess"("login");
+
+-- CreateIndex
+CREATE INDEX "_InvoiceAccounts_B_index" ON "public"."_InvoiceAccounts"("B");
 
 -- AddForeignKey
 ALTER TABLE "public"."Individual" ADD CONSTRAINT "Individual_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -424,9 +436,6 @@ ALTER TABLE "public"."BillingPlan" ADD CONSTRAINT "BillingPlan_customerId_fkey" 
 ALTER TABLE "public"."BillingPlan" ADD CONSTRAINT "BillingPlan_productId_fkey" FOREIGN KEY ("productId") REFERENCES "public"."Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."AccountReceivable" ADD CONSTRAINT "AccountReceivable_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "public"."Invoice"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "public"."AccountReceivable" ADD CONSTRAINT "AccountReceivable_saleId_fkey" FOREIGN KEY ("saleId") REFERENCES "public"."Sale"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -434,3 +443,9 @@ ALTER TABLE "public"."UserAccess" ADD CONSTRAINT "UserAccess_userId_fkey" FOREIG
 
 -- AddForeignKey
 ALTER TABLE "public"."UserToken" ADD CONSTRAINT "UserToken_accessId_fkey" FOREIGN KEY ("accessId") REFERENCES "public"."UserAccess"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."_InvoiceAccounts" ADD CONSTRAINT "_InvoiceAccounts_A_fkey" FOREIGN KEY ("A") REFERENCES "public"."AccountReceivable"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."_InvoiceAccounts" ADD CONSTRAINT "_InvoiceAccounts_B_fkey" FOREIGN KEY ("B") REFERENCES "public"."Invoice"("id") ON DELETE CASCADE ON UPDATE CASCADE;

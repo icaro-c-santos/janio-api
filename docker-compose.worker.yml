@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  report-worker:
+    build: .
+    container_name: janio-report-worker
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - BUCKET_NAME=${BUCKET_NAME}
+    command: npm run worker
+    depends_on:
+      - postgres
+    networks:
+      - janio-network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: janio-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: janio
+      POSTGRES_USER: janio
+      POSTGRES_PASSWORD: janio123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - janio-network
+
+volumes:
+  postgres_data:
+
+networks:
+  janio-network:
+    driver: bridge
+
+

@@ -5,6 +5,7 @@ import { SaleController } from '../../modules/sales/controller/sales.controller'
 import { ProductController } from '../../modules/products/controller/product.controller';
 import { CustomerController } from '../../modules/customers/controller/customer.controller';
 import { CheckReadinessController } from '../../modules/readlliness/controllers/checkReadliness.controller';
+import { ReportController } from '../../modules/reports/controller/report.controller';
 
 export const upload = multer({
   storage: multer.memoryStorage(),
@@ -17,6 +18,7 @@ export function registerRoutes(
     saleController: SaleController;
     customerController: CustomerController;
     productController: ProductController;
+    reportController: ReportController;
   },
 ) {
   app.get(
@@ -48,6 +50,13 @@ export function registerRoutes(
   );
 
   app.get(
+    '/products',
+    controllers.productController.getAllProducts.bind(
+      controllers.productController,
+    ),
+  );
+
+  app.get(
     '/products/:productId',
     controllers.productController.getProductById.bind(
       controllers.productController,
@@ -68,5 +77,40 @@ export function registerRoutes(
     '/sales',
     upload.single('file'),
     controllers.saleController.createSale.bind(controllers.saleController),
+  );
+
+  app.get(
+    '/reports',
+    controllers.reportController.getAllReports.bind(
+      controllers.reportController,
+    ),
+  );
+
+  app.get(
+    '/reports/:id',
+    controllers.reportController.getReportById.bind(
+      controllers.reportController,
+    ),
+  );
+
+  app.post(
+    '/reports',
+    controllers.reportController.createReport.bind(
+      controllers.reportController,
+    ),
+  );
+
+  app.get(
+    '/reports/types',
+    controllers.reportController.getReportTypes.bind(
+      controllers.reportController,
+    ),
+  );
+
+  app.get(
+    '/reports/:id/download',
+    controllers.reportController.downloadReport.bind(
+      controllers.reportController,
+    ),
   );
 }

@@ -5,11 +5,13 @@ import {
   IGetProductByIdUseCase,
   IGetProductPriceByCustomerIdUseCase,
 } from '../usecases/types';
+import { IGetAllProductsUseCase } from '../usecases/get-all-products.use.case';
 
 export class ProductController {
   constructor(
     private readonly getProductByIdUseCase: IGetProductByIdUseCase,
     private readonly getProductPriceByCustomerIdUseCase: IGetProductPriceByCustomerIdUseCase,
+    private readonly getAllProductsUseCase: IGetAllProductsUseCase,
   ) {}
 
   async getProductById(req: Request, res: Response) {
@@ -68,5 +70,20 @@ export class ProductController {
     }
 
     return res.status(200).json(result.data);
+  }
+
+  async getAllProducts(req: Request, res: Response) {
+    const result = await this.getAllProductsUseCase.execute();
+
+    if (!result.success) {
+      return res.status(400).json({
+        message: result.error,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: result.data,
+    });
   }
 }

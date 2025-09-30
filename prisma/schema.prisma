@@ -304,6 +304,7 @@ model Invoice {
   periodEnd     DateTime
   description   String?
   totalValue    Decimal             @db.Decimal(10,2)
+  totalPaid     Decimal?             @default(0) @db.Decimal(10,2)
   dueDate       DateTime
   status        InvoiceStatus       @default(PENDING)
   metadata      Json?
@@ -312,7 +313,7 @@ model Invoice {
   updatedAt     DateTime            @updatedAt
   deletedAt     DateTime?
 
-  receivables   AccountReceivable[]
+  receivables   AccountReceivable[]  @relation("InvoiceAccounts")
 }
 
 enum AccountReceivableStatus {
@@ -331,9 +332,9 @@ model AccountReceivable {
   expectedDate DateTime?              
   metadata    Json? 
 
-  invoiceId  String                   @db.Uuid
-  invoice    Invoice                  @relation(fields: [invoiceId], references: [id])
   sale       Sale?                    @relation(fields: [saleId], references: [id])
+  invoiceId  String?  @db.Uuid
+  invoices   Invoice[]                @relation("InvoiceAccounts")
 }
 
 // =======================
