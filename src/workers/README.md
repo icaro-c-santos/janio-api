@@ -100,3 +100,4 @@ Para monitorar o worker:
 - Para alta demanda, considere múltiplos workers
 
 
+

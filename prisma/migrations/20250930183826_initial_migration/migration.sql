@@ -352,9 +352,6 @@ CREATE TABLE "public"."_InvoiceAccounts" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "public"."User"("email");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Individual_cpf_key" ON "public"."Individual"("cpf");
 
 -- CreateIndex

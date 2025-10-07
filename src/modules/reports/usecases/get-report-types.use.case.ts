@@ -11,3 +11,4 @@ export class GetReportTypesUseCase implements IGetReportTypesUseCase {
     return this.reportTypesRepository.getReportTypes();
   }
 }
+

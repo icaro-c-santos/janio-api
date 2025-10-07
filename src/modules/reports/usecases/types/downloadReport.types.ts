@@ -11,3 +11,4 @@ export interface DownloadReportResponse {
 export interface IDownloadReportUseCase {
   execute(input: DownloadReportInput): Promise<DownloadReportResponse>;
 }
+

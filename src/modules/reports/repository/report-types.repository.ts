@@ -89,3 +89,4 @@ export class ReportTypesRepository implements IReportTypesRepository {
     return descriptions[status];
   }
 }
+
